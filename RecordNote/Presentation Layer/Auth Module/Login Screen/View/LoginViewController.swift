@@ -25,7 +25,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        addHosting(LoginView(viewMdel: viewModel))
+        addHosting(LoginView(viewModel: viewModel))
         
     }
     

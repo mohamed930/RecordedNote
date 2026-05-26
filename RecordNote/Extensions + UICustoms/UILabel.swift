@@ -42,62 +42,6 @@ private struct AssociatedKeys {
     static var weightKey = "quicksandWeightKey"
 }
 
-//
-// MARK: - UILabel Implementation
-//
-@IBDesignable
-extension UILabel: SharedAttributes {
-    
-    @IBInspectable var quicksandWeight: Int {
-        get { objc_getAssociatedObject(self, &AssociatedKeys.weightKey) as? Int ?? 0 }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.weightKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            updateQuicksandFont()
-        }
-    }
-    
-    func updateQuicksandFont() {
-        applyQuicksandFont(to: font, weight: quicksandWeight) { self.font = $0 }
-    }
-}
-
-//
-// MARK: - UITextField Implementation
-//
-@IBDesignable
-extension UITextField: SharedAttributes {
-    
-    @IBInspectable var quicksandWeight: Int {
-        get { objc_getAssociatedObject(self, &AssociatedKeys.weightKey) as? Int ?? 0 }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.weightKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            updateQuicksandFont()
-        }
-    }
-    
-    func updateQuicksandFont() {
-        applyQuicksandFont(to: font, weight: quicksandWeight) { self.font = $0 }
-    }
-}
-
-// MARK: - UIButton
-@IBDesignable
-extension UIButton: SharedAttributes {
-    
-    @IBInspectable var quicksandWeight: Int {
-        get { objc_getAssociatedObject(self, &AssociatedKeys.weightKey) as? Int ?? 0 }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.weightKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            updateQuicksandFont()
-        }
-    }
-    
-    func updateQuicksandFont() {
-        guard let baseFont = titleLabel?.font else { return }
-        applyQuicksandFont(to: baseFont, weight: quicksandWeight) { self.titleLabel?.font = $0 }
-    }
-}
-
 extension UILabel {
     func setLineHeight(_ height: CGFloat) {
         guard let text = self.text else { return }

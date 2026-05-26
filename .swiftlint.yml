@@ -107,19 +107,7 @@ type_body_length:
   error: 400
 file_length:
   error: 1200
-line_length:
-  warning: 180
-  ignores_urls: true
-  ignores_function_declarations: true
-  ignores_comments: true
 legacy_hashing: error
-
-attributes:
-  always_on_same_line:
-    - "@IBSegueAction"
-    - "@IBAction"
-    - "@NSManaged"
-    - "@objc"
 
 # naming rules can set warnings/errors for min_length and max_length
 # additionally they can set excluded names
@@ -152,21 +140,7 @@ identifier_name:
     - key
     - i
 
-multiline_arguments:
-  first_argument_location: next_line
-  only_enforce_after_first_closure_on_first_line: true
-
 private_over_fileprivate:
   validate_extensions: true
-  
-trailing_whitespace:
-  ignores_empty_lines: true
-  ignores_comments: true
-
-indentation_width:
-  indentation_width: 4
-
-vertical_whitespace:
-  max_empty_lines: 2
 
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown)

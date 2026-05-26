@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D38850BD2FC5D1ED001D8A77 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +131,7 @@
 			);
 			name = RecordNote;
 			packageProductDependencies = (
+				D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */,
 			);
 			productName = RecordNote;
 			productReference = D38850A62FC5D1EC001D8A77 /* RecordNote.app */;
@@ -210,6 +216,7 @@
 			mainGroup = D388509D2FC5D1EC001D8A77;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D38850A72FC5D1EC001D8A77 /* Products */;
@@ -627,6 +634,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D388509E2FC5D1EC001D8A77 /* Project object */;
 }
