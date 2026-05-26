@@ -1,0 +1,23 @@
+//
+//  LoginCoordinator.swift
+//  RecordNote
+//
+//  Created by Mohamed Ali on 26/05/2026.
+//
+
+import UIKit
+
+class LoginCoordinator: BaseCoordinator {
+    let navigationController: UINavigationController
+        
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+    }
+    
+    override func start() {
+        let viewmodel = LoginViewModel(coordinator: self)
+        let viewControlller = LoginViewController(viewModel: viewmodel)
+        viewControlller.hidesBottomBarWhenPushed = true
+        navigationController.setViewControllers([viewControlller], animated: true)
+    }
+}
