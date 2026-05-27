@@ -16,19 +16,6 @@ protocol Storeable {
     init?(storeData: Data?)
 }
 
-extension Storeable where Self: Codable {
-    
-    var storeData: Data? {
-        try? JSONEncoder().encode(self)
-    }
-    
-    init?(storeData: Data?) {
-        guard let storeData else { return nil }
-        guard let decoded = try? JSONDecoder().decode(Self.self, from: storeData) else { return nil }
-        self = decoded
-    }
-}
-
 protocol LocalStorageProtocol {
     func value<T>(key: LocalStorageKeysProtocol) -> T?
     func write<T>(key: LocalStorageKeysProtocol, value: T?)
@@ -39,16 +26,8 @@ protocol LocalStorageProtocol {
 }
 
 enum LocalStorageKeys: String, LocalStorageKeysProtocol {
-    case token
-    case fullName
-    case username
-    case avatar
-    case email
-    case phone
-    case countryCode
-    case accountType
-    case driverProfile
-    case isLogin
+    case AppleLanguages
+    case firstTime
 }
 
 

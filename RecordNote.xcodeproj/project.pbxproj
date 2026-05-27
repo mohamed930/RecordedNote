@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */; };
+		D3BB312B2FC71650000A8DFD /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312A2FC71650000A8DFD /* Reachability */; };
+		D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312D2FC71764000A8DFD /* PlainPing */; };
+		D3BB31312FC71883000A8DFD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB31302FC71883000A8DFD /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +72,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */,
+				D3BB31312FC71883000A8DFD /* Alamofire in Frameworks */,
 				D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */,
+				D3BB312B2FC71650000A8DFD /* Reachability in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +138,9 @@
 			name = RecordNote;
 			packageProductDependencies = (
 				D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */,
+				D3BB312A2FC71650000A8DFD /* Reachability */,
+				D3BB312D2FC71764000A8DFD /* PlainPing */,
+				D3BB31302FC71883000A8DFD /* Alamofire */,
 			);
 			productName = RecordNote;
 			productReference = D38850A62FC5D1EC001D8A77 /* RecordNote.app */;
@@ -217,6 +226,9 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				D3BB31292FC71650000A8DFD /* XCRemoteSwiftPackageReference "Reachability.swift" */,
+				D3BB312C2FC71764000A8DFD /* XCRemoteSwiftPackageReference "PlainPing" */,
+				D3BB312F2FC71883000A8DFD /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D38850A72FC5D1EC001D8A77 /* Products */;
@@ -644,6 +656,30 @@
 				minimumVersion = 8.0.3;
 			};
 		};
+		D3BB31292FC71650000A8DFD /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		D3BB312C2FC71764000A8DFD /* XCRemoteSwiftPackageReference "PlainPing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/naptics/PlainPing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.3;
+			};
+		};
+		D3BB312F2FC71883000A8DFD /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.12.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -651,6 +687,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		D3BB312A2FC71650000A8DFD /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3BB31292FC71650000A8DFD /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			productName = Reachability;
+		};
+		D3BB312D2FC71764000A8DFD /* PlainPing */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3BB312C2FC71764000A8DFD /* XCRemoteSwiftPackageReference "PlainPing" */;
+			productName = PlainPing;
+		};
+		D3BB31302FC71883000A8DFD /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3BB312F2FC71883000A8DFD /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
