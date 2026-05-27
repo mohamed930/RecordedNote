@@ -20,4 +20,10 @@ class LoginCoordinator: BaseCoordinator {
         viewControlller.hidesBottomBarWhenPushed = true
         navigationController.setViewControllers([viewControlller], animated: true)
     }
+    
+    func moveToSignUpScreen() {
+        let coordinator = SignupCoordinator(navigationController: navigationController)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
 }

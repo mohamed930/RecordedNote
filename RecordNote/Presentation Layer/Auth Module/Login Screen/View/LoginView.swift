@@ -14,28 +14,8 @@ struct LoginView: View {
     var body: some View {
         
         VStack(spacing: 0) {
-            ZStack {
-                Color.EDE_9_FE
-                
-                VStack(spacing: 10) {
-                    HStack(spacing: 3) {
-                        Spacer()
-                        
-                        Text("Welcome back!")
-                            .setFont(fontName: .mainFont, size: 14)
-                            .foregroundStyle(Color._7_C_3_AED)
-                        
-                        Image(.hi)
-                            .resizable()
-                            .frame(width: 13,height: 13)
-                    }
-                    .padding(.top,32)
-                    
-                    Image(.record)
-                }
-                .padding(.horizontal)
-            }
-            .frame(maxHeight: 210)
+            HeaderComponets(text: "Welcome back!",
+                            isBackVisible: false)
             
             VStack(alignment: .leading,spacing: 10) {
                 
@@ -101,6 +81,7 @@ struct LoginView: View {
                     viewModel.loginButtonAction()
                 }
                 .padding(.bottom,14)
+                .disabled(!viewModel.isButtonEnabled)
                 
                 HStack(spacing: 4) {
                     Color.F_3_F_4_F_6

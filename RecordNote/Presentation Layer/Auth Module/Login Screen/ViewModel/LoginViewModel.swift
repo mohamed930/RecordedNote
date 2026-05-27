@@ -17,6 +17,11 @@ class LoginViewModel: NSObject, ObservableObject {
     @Published var isSaved: Bool = false
     @Published var isloading: Bool = false
     @Published var errorFlag: Bool = false
+    var isButtonEnabled: Bool {
+        return  !emailAddress.isEmpty &&
+                !password.isEmpty &&
+                emailValidation
+    }
     
     // MARK: - Coordinators
     var coordinator: LoginCoordinator
@@ -27,13 +32,7 @@ class LoginViewModel: NSObject, ObservableObject {
     
     // MARK: - Actions.
     func checkMailValidation() {
-        let emailRegex =
-            #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
-
-        emailValidation = NSPredicate(
-                format: "SELF MATCHES %@",
-                emailRegex
-            ).evaluate(with: emailAddress)
+        emailValidation = DIContainer.shared.checkMailValidation(emailAddress: emailAddress)
     }
     
     func savedPasswordButtonAction() {
@@ -64,6 +63,6 @@ class LoginViewModel: NSObject, ObservableObject {
     }
     
     func moveToSignUpButtonAction() {
-        
+        coordinator.moveToSignUpScreen()
     }
 }
