@@ -6,29 +6,44 @@
 //
 
 import UIKit
-import Combine
 
 protocol AuthProtocol {
-    func signUp(params: UserInputModel) -> Future<BaseModel<UserSignupModel>,NSError>
-    func login(data: UserInputModel) -> Future<BaseModel<UserLoginModel>,NSError>
+    
+    func signUp(
+        params: UserInputModel
+    ) async throws -> BaseModel<UserLoginModel>
+    
+    func login(
+        data: UserInputModel
+    ) async throws -> BaseModel<UserLoginModel>
 }
 
+final class AuthAPI: BaseAPI<AuthNetworking>, AuthProtocol {
 
-class AuthAPI: BaseAPI<AuthNetworking>, AuthProtocol {
-    
-    func signUp(params: UserInputModel) -> Future<BaseModel<UserSignupModel>, NSError> {
-        requestPublisher(Target: .signUp(data: params), ClassName: BaseModel<UserSignupModel>.self)
+    // MARK: - Sign Up
+    func signUp(
+        params: UserInputModel
+    ) async throws -> BaseModel<UserLoginModel> {
+        return try await request(
+            target: .signUp(data: params),
+            responseModel: BaseModel<UserLoginModel>.self
+        )
     }
-    
-    func login(data: UserInputModel) -> Future<BaseModel<UserLoginModel>, NSError> {
-        requestPublisher(Target: .login(data: data), ClassName: BaseModel<UserLoginModel>.self)
+
+    // MARK: - Login
+    func login(
+        data: UserInputModel
+    ) async throws -> BaseModel<UserLoginModel> {
+
+        return try await request(
+            target: .login(data: data),
+            responseModel: BaseModel<UserLoginModel>.self
+        )
     }
-    
-    /// this function try to get UUId for device to sent it to database.
-    /// - Returns: return UUId to device.
+
+    // MARK: - Device UUID
+    /// Get device UUID
     private func getVendorIdentifier() -> String? {
-        let currentDevice = UIDevice.current
-        let vendorIdentifier = currentDevice.identifierForVendor?.uuidString
-        return vendorIdentifier
+        UIDevice.current.identifierForVendor?.uuidString
     }
 }

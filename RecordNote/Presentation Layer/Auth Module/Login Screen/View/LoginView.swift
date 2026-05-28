@@ -78,7 +78,10 @@ struct LoginView: View {
                 AppButton(title: "Login In",
                           isLoading: $viewModel.isloading,
                           icon: .arrorRight) {
-                    viewModel.loginButtonAction()
+                    Task {
+                        await viewModel.loginButtonAction()
+                    }
+                    
                 }
                 .padding(.bottom,14)
                 .disabled(!viewModel.isButtonEnabled)
@@ -167,5 +170,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(coordinator: LoginCoordinator(navigationController: UINavigationController())))
+    LoginView(viewModel: LoginViewModel(coordinator: LoginCoordinator(navigationController: UINavigationController()),useCases: AuthUseCase(repository: AuthRepository(service: AuthAPI()))))
 }

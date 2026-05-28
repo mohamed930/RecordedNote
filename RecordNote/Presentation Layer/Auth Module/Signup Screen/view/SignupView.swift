@@ -115,7 +115,9 @@ struct SignupView: View {
                     AppButton(title: "Sign Up",
                               isLoading: $viewModel.isloading,
                               icon: .arrorRight) {
-                        viewModel.signUpOperation()
+                        Task {
+                            await viewModel.signUpOperation()
+                        }
                     }
                     .padding(.bottom,14)
                     .disabled(!viewModel.isButtonEnabled)
@@ -169,7 +171,7 @@ struct SignupView: View {
                 AppAlert(
                     image: .attension,
                     title: "Error",
-                    message: "data wan't in correct model",
+                    message: viewModel.errorMessage,
                     actionTitle: "Ok",
                     cancelTitle: "Cancel",
                     hideCancelButton: true,
@@ -187,5 +189,5 @@ struct SignupView: View {
 }
 
 #Preview {
-    SignupView(viewModel: SignupViewModel(coordinator: SignupCoordinator(navigationController: UINavigationController())))
+    SignupView(viewModel: SignupViewModel(coordinator: SignupCoordinator(navigationController: UINavigationController()), useCases: AuthUseCase(repository: AuthRepository(service: AuthAPI()))))
 }

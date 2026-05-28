@@ -11,20 +11,20 @@ import Foundation
 // Quality: https://msr.lnj.sa/
 // Production:
 
-struct errorMessage {
-    let type: errorStatus
+struct ErrorObjMessage {
+    let type: ErrorStatus
     let message: String
     var operation: String = ""
 }
 
-enum errorStatus {
+enum ErrorStatus {
     case connection
     case anyThing
     case validation
     case unauthorization
 }
 
-enum Api: String {
+enum ApiUrl: String {
     case baseUrl = "https://msr.lnj.sa/"
     case signup = "signup"
     case signin = "signin"

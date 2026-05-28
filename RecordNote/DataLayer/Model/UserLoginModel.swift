@@ -6,7 +6,7 @@
 //
 
 
-struct UserLoginModel: Codable {
+struct UserLoginModel: nonisolated Decodable, Sendable {
     let partnerToken, name, age, mail: String
     let level, phone: String
 

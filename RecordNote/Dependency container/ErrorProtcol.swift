@@ -6,37 +6,111 @@
 //
 
 import Foundation
-import Combine
 
-protocol ErrorProtcol {
-    func handleError(error: Subscribers.Completion<NSError>) -> errorMessage?
-    func sendAuthFaild() -> errorMessage
+protocol ErrorProtocol {
+
+    func handleError(
+        _ error: Error
+    ) -> ErrorObjMessage
+
+    func sendAuthFailed() -> ErrorObjMessage
 }
 
+// MARK: - Default Implementation
 
-extension ErrorProtcol {
-    
-    func handleError(error: Subscribers.Completion<NSError>) -> errorMessage? {
-        switch error {
-           case .finished: break
-           case .failure(let err):
-           let e = err.userInfo[NSLocalizedDescriptionKey] as? String ?? ""
-           print("F: \(e)")
-            
-            if e == "Error in your connection" {
-                let model = errorMessage(type: .connection, message: "Error in your connection")
-                return model
-            }
-            else {
-                let model = errorMessage(type: .anyThing, message: e)
-                return model
+extension ErrorProtocol {
+
+    func handleError(
+        _ error: Error
+    ) -> ErrorObjMessage {
+
+        // API Errors
+
+        if let apiError = error as? APIError {
+
+            switch apiError {
+
+            case .unauthorized:
+
+                return ErrorObjMessage(
+                    type: .unauthorization,
+                    message: "Session expired"
+                )
+
+            case .serverError:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: "Server error occurred"
+                )
+
+            case .invalidURL:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: "Invalid URL"
+                )
+
+            case .invalidResponse:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: "Invalid response"
+                )
+
+            case .decodingError:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: "Failed to decode data"
+                )
+
+            case .unknown:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: "Unknown error occurred"
+                )
             }
         }
-        
-        return nil
+
+        // URLSession Errors
+
+        if let urlError = error as? URLError {
+
+            switch urlError.code {
+
+            case .notConnectedToInternet,
+                    .networkConnectionLost,
+                    .timedOut:
+
+                return ErrorObjMessage(
+                    type: .connection,
+                    message: "Check your internet connection"
+                )
+
+            default:
+
+                return ErrorObjMessage(
+                    type: .anyThing,
+                    message: urlError.localizedDescription
+                )
+            }
+        }
+
+        // Default
+
+        return ErrorObjMessage(
+            type: .anyThing,
+            message: error.localizedDescription
+        )
     }
-    
-    func sendAuthFaild() -> errorMessage {
-        return errorMessage(type: .unauthorization, message: "تسجيل الدخول")
+
+    func sendAuthFailed() -> ErrorObjMessage {
+
+        return ErrorObjMessage(
+            type: .unauthorization,
+            message: "تسجيل الدخول"
+        )
     }
 }

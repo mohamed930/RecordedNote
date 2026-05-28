@@ -7,8 +7,9 @@
 
 import Foundation
 import Combine
+import IQKeyboardManagerSwift
 
-class SignupViewModel: NSObject, ObservableObject {
+class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
     
     // MARK: - Publishers.
     @Published var fullName: String = ""
@@ -19,6 +20,7 @@ class SignupViewModel: NSObject, ObservableObject {
     @Published var isSaved: Bool = false
     @Published var isloading: Bool = false
     @Published var errorFlag: Bool = false
+    @Published var errorMessage: String = ""
     
     // MARK: - validation.
     var isButtonEnabled: Bool {
@@ -33,9 +35,11 @@ class SignupViewModel: NSObject, ObservableObject {
     
     // MARK: - Coordinators
     var coordinator: SignupCoordinator
+    var useCases: AuthUseCase
     
-    init(coordinator: SignupCoordinator) {
+    init(coordinator: SignupCoordinator,useCases: AuthUseCase) {
         self.coordinator = coordinator
+        self.useCases = useCases
     }
     
     // MARK: - Actions.
@@ -51,13 +55,30 @@ class SignupViewModel: NSObject, ObservableObject {
         isSaved.toggle()
     }
     
-    func signUpOperation() {
+    func signUpOperation() async {
+        
+        IQKeyboardManager.shared.resignFirstResponder()
+        
         isloading = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            guard let self else { return }
+        do {
+            let response = try await useCases.signup(name: fullName, email: emailAddress, password: password)
             
             isloading = false
+            
+            if response.isEmpty {
+                errorFlag = false
+            }
+            else {
+                errorMessage = response
+                errorFlag = true
+            }
+            
+        } catch {
+            isloading = false
+            
+            let message: ErrorObjMessage = handleError(error)
+            errorMessage = message.message
             errorFlag = true
         }
     }

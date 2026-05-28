@@ -26,8 +26,9 @@ protocol LocalStorageProtocol {
 }
 
 enum LocalStorageKeys: String, LocalStorageKeysProtocol {
-    case AppleLanguages
+    case appleLanguages
     case firstTime
+    case fullName
 }
 
 

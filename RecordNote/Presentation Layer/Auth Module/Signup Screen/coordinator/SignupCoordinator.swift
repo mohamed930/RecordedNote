@@ -15,7 +15,7 @@ class SignupCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        let viewmodel = SignupViewModel(coordinator: self)
+        let viewmodel = SignupViewModel(coordinator: self, useCases: AuthUseCase(repository: AuthRepository(service: AuthAPI())))
         let viewControlller = SignupViewController(viewModel: viewmodel)
         viewControlller.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewControlller, animated: true)

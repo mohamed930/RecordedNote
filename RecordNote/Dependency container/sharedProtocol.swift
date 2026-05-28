@@ -7,21 +7,21 @@
 
 import Foundation
 
-enum language {
+enum Language {
     case arabic
     case english
 }
 
-protocol sharedProtocol {
-    func fetchAppLanguage() -> language
+protocol SharedProtocol {
+    func fetchAppLanguage() -> Language
 }
 
-class SharedLanguage: sharedProtocol {
+class SharedLanguage: SharedProtocol {
     static var shared = SharedLanguage()
 }
 
-extension sharedProtocol {
-    func fetchAppLanguage() -> language {
+extension SharedProtocol {
+    func fetchAppLanguage() -> Language {
         
         let localstorage: LocalStorageProtocol = LocalStorage()
         
@@ -29,7 +29,7 @@ extension sharedProtocol {
         
         let preCorrectLanguage: [String] = pre.components(separatedBy: "-")
         
-        let systemLanguage: language!
+        let systemLanguage: Language!
         
         if preCorrectLanguage[0] == "en" {
             systemLanguage = .english
@@ -38,7 +38,7 @@ extension sharedProtocol {
             systemLanguage = .arabic
         }
         
-        guard let langugage: [String] = localstorage.value(key: LocalStorageKeys.AppleLanguages) else { return systemLanguage }
+        guard let langugage: [String] = localstorage.value(key: LocalStorageKeys.appleLanguages) else { return systemLanguage }
                 
         guard let pickedLang: String = langugage.first else { return systemLanguage }
                 

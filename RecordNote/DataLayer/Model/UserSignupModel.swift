@@ -6,7 +6,7 @@
 //
 
 
-struct UserSignupModel: Codable {
+struct UserSignupModel: nonisolated Decodable, Sendable {
     let partnerToken: String
     
     enum CodingKeys: String,CodingKey {

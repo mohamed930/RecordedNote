@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import IQKeyboardManagerSwift
 
 class LoginViewModel: NSObject, ObservableObject {
     
@@ -25,9 +26,11 @@ class LoginViewModel: NSObject, ObservableObject {
     
     // MARK: - Coordinators
     var coordinator: LoginCoordinator
+    private var useCases: AuthUseCase
     
-    init(coordinator: LoginCoordinator) {
+    init(coordinator: LoginCoordinator,useCases: AuthUseCase) {
         self.coordinator = coordinator
+        self.useCases = useCases
     }
     
     // MARK: - Actions.
@@ -43,12 +46,28 @@ class LoginViewModel: NSObject, ObservableObject {
         
     }
     
-    func loginButtonAction() {
+    func loginButtonAction() async {
+        
+        IQKeyboardManager.shared.resignFirstResponder()
+        
         isloading = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            guard let self else { return }
+        do {
+            let response = try await useCases.login(email: emailAddress, password: password)
             
+            isloading = false
+            
+            if response {
+                errorFlag = false
+                
+                // MARK: - TODO: - move to TabBar.
+                
+            }
+            else {
+                errorFlag = true
+            }
+            
+        } catch {
             isloading = false
             errorFlag = true
         }

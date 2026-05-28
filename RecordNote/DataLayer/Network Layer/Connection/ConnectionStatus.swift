@@ -16,15 +16,15 @@ final class CheckConnection {
     
     var successCounter = 0
     
-    enum connectionStatus {
+    enum ConnectionStatus {
         case unspecified
         case connected
         case disconnected
         case error
     }
     
-    private var connectionStatusPublisher = CurrentValueSubject<connectionStatus,Never>(.unspecified)
-    var connectionStatusObservable: AnyPublisher<connectionStatus,Never> {
+    private var connectionStatusPublisher = CurrentValueSubject<ConnectionStatus,Never>(.unspecified)
+    var connectionStatusObservable: AnyPublisher<ConnectionStatus,Never> {
         return connectionStatusPublisher.eraseToAnyPublisher()
     }
     
@@ -61,7 +61,7 @@ final class CheckConnection {
         }
     }
     
-    private func performTaskMultipleTimes(completion: @escaping (connectionStatus) -> Void) {
+    private func performTaskMultipleTimes(completion: @escaping (ConnectionStatus) -> Void) {
         var counter = 0
 
         let timer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { [weak self] timer in

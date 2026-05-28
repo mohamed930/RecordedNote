@@ -15,7 +15,7 @@ class LoginCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        let viewmodel = LoginViewModel(coordinator: self)
+        let viewmodel = LoginViewModel(coordinator: self, useCases: AuthUseCase(repository: AuthRepository(service: AuthAPI())))
         let viewControlller = LoginViewController(viewModel: viewmodel)
         viewControlller.hidesBottomBarWhenPushed = true
         navigationController.setViewControllers([viewControlller], animated: true)

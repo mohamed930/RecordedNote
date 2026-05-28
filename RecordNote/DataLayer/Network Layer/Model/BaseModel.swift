@@ -6,7 +6,7 @@
 //
 
 
-struct BaseModel<T: Codable>: Codable {
+struct BaseModel<T: Decodable>: Decodable {
     var data: T?
     var version: String?
     let itemsCount: Int?

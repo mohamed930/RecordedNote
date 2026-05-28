@@ -1,241 +1,344 @@
 //
 //  BaseAPI.swift
-//  testConnection
-//
-//  Created by Mohamed Ali on 19/01/2024.
 //
 
 import Foundation
 import Alamofire
-import Combine
 
-struct fileUpload {
-    var type: Bool
-    var key: String
-    var fileType: String?
-    var mimeType: String?
-    var file: Data
+// MARK: - File Upload
+
+struct FileUpload {
+
+    let data: Data
+    let name: String
+    let fileName: String
+    let mimeType: String
 }
 
-class BaseAPI<T:TargetType>: sharedProtocol {
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    func requestPublisher<M:Codable>(Target:T, ClassName:M.Type) -> Future<M,NSError> {
-        
-        let method = Alamofire.HTTPMethod(rawValue: Target.method.rawValue)
-        let headers = Alamofire.HTTPHeaders(Target.headers ?? [:])
-        let params = buildParams(task: Target.task)
-        
-        // Create a URLRequest with the desired URL and timeout interval
-        var urlRequest = URLRequest(url: URL(string: Target.baseURL.rawValue + Target.path.rawValue)!)
-        urlRequest.timeoutInterval = 30/60
-        
-        urlRequest.method = method
-        urlRequest.headers = headers
-        ShardCheckConnection.shared.checkNetwork()
-        
-        
-        return Future { [unowned self] promise in
-            ShardCheckConnection.shared.connectionStatusObservable.sink(receiveValue: { connection in
-                switch connection {
-                    
-                case .unspecified: break
-                    
-                case .connected:
-                    AF.request(urlRequest.url!, method: method, parameters: params.0,encoding: params.1,headers: headers).responseDecodable(of: M.self) { [weak self] response in
-                        guard let self = self else { return }
-                        
-                        // Use the result of handleResponse here
-                        self.handleResponse(Target: Target, ClassName: M.self, response: response).sink { completion in
-                            switch completion {
-                            case .finished:
-                                break // Do nothing for successful completion
-                            case .failure(let error):
-                                promise(.failure(error))
-                            }
-                        } receiveValue: { model in
-                            promise(.success(model))
-                        }.store(in: &self.cancellables)
-                    }
-                    
-                case .disconnected, .error:
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.message1])
-                    promise(.failure(error))
-                }
-            }).store(in: &cancellables)
-            
+// MARK: - Base API
+
+class BaseAPI<T: TargetType> {
+
+    // MARK: - Properties
+
+    private let session: URLSession
+
+    // MARK: - Init
+
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
+
+    // MARK: - Request
+
+    func request<M: Decodable>(
+        target: T,
+        responseModel: M.Type
+    ) async throws -> M {
+
+        let request = try buildRequest(target: target)
+
+        NetworkLogger.logRequest(request)
+
+        let startDate = Date()
+
+        do {
+
+            let (data, response) = try await session.data(
+                for: request
+            )
+
+            let duration = Date().timeIntervalSince(startDate)
+
+            NetworkLogger.logResponse(
+                data: data,
+                response: response,
+                error: nil,
+                duration: duration
+            )
+
+            try validateResponse(response)
+
+            return try decode(
+                data: data,
+                model: responseModel
+            )
+
+        } catch {
+
+            let duration = Date().timeIntervalSince(startDate)
+
+            NetworkLogger.logResponse(
+                data: nil,
+                response: nil,
+                error: error,
+                duration: duration
+            )
+
+            throw error
         }
     }
-    
-    
-    func requestPublisherWithFile<M:Codable>(Target:T,file: fileUpload, params: [String: Any]?, ClassName:M.Type) -> Future<M,NSError> {
-        let date = Date()
-                
-        //Set Your URL
-        let api_url = Target.baseURL.rawValue + Target.path.rawValue
-        let url = URL(string: api_url)!
-        
-        let method = Alamofire.HTTPMethod(rawValue: Target.method.rawValue)
-        let headers = Alamofire.HTTPHeaders(Target.headers ?? [:])
-        
 
-        var urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 30.0 * 1000)
-        
-        urlRequest.headers = headers
-        urlRequest.method = method
-    
-        urlRequest.httpMethod = Target.method.rawValue
-        urlRequest.addValue("*/*", forHTTPHeaderField: "Accept")
-        urlRequest.addValue("multipart/form-data", forHTTPHeaderField: "mimeType")
-        
+    // MARK: - Upload
 
-        //Set File For Upload Data
-        let key = file.key
-        let fileData = file.file
-        
-        
-        return Future { [unowned self] promise in
-            ShardCheckConnection.shared.connectionStatusObservable.sink(receiveValue: { connection in
-                switch connection {
-                    
-                case .unspecified: break
-                    
-                case .connected:
-                    // Now Execute
-                AF.upload(multipartFormData: { multiPart in
-                    if let params = params {
-                        for (key, value) in params {
-                            if let temp = value as? String {
-                                multiPart.append(temp.data(using: .utf8)!, withName: key )
-                            }
-                            if let temp = value as? Int {
-                                multiPart.append("\(temp)".data(using: .utf8)!, withName: key )
-                            }
-                            if let temp = value as? Double {
-                                multiPart.append("\(temp)".data(using: .utf8)!, withName: key)
-                            }
-                            if let temp = value as? [[String:String]] {
-                                
-                                var arr = Array<String>()
-                                
-                                for i in temp {
-                                    let dat = try? JSONSerialization.data(withJSONObject: i, options: .prettyPrinted)
-                                    
-                                    let str = String(data: dat!, encoding: String.Encoding.utf8)
-                                    
-                                    arr.append(str!)
-                                }
-                                
-                                arr.forEach({element in
-                                    let keyObj = key + "[]"
-                                    
-                                    multiPart.append(element.data(using: .utf8)!, withName: keyObj)
-                                })
-                                
-                            }
-                            if let temp = value as? NSArray {
-                                temp.forEach({ element in
-                                    let keyObj = key + "[]"
-                                    if let string = element as? String {
-                                        multiPart.append(string.data(using: .utf8)!, withName: keyObj)
-                                    } else
-                                        if let num = element as? Int {
-                                            let value = "\(num)"
-                                            multiPart.append(value.data(using: .utf8)!, withName: keyObj)
-                                    }
-                                })
-                            }
-                        }
-                    }
-                    
-                    
-                    if file.type {
-                        multiPart.append(fileData, withName: key, fileName:  date.stringDate() + ".jpeg", mimeType: "image/jpeg")
-                    }
-                    else {
-                        multiPart.append(fileData, withName: key, fileName:  date.stringDate() + ".\(file.fileType!)", mimeType: "\(file.mimeType!)")
-                    }
-                    
-                    
-                }, with: urlRequest)
-                    .responseDecodable(of: M.self) { [weak self] response in
-                        guard let self = self else { return }
-                        
-                        // Use the result of handleResponse here
-                        self.handleResponse(Target: Target, ClassName: M.self, response: response).sink { completion in
-                            switch completion {
-                            case .finished:
-                                break // Do nothing for successful completion
-                            case .failure(let error):
-                                promise(.failure(error))
-                            }
-                        } receiveValue: { model in
-                            promise(.success(model))
-                        }.store(in: &self.cancellables)
-                }
-                    
-                case .disconnected, .error:
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.message1])
-                    promise(.failure(error))
-                }
-            }).store(in: &cancellables)
-            
+    func upload<M: Decodable>(
+        target: T,
+        params: [String: Any]?,
+        file: FileUpload,
+        responseModel: M.Type
+    ) async throws -> M {
+
+        guard let url = URL(
+            string: target.baseURL.rawValue + target.path.rawValue
+        ) else {
+            throw APIError.invalidURL
+        }
+
+        let boundary = UUID().uuidString
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = target.method.rawValue
+
+        request.setValue(
+            "multipart/form-data; boundary=\(boundary)",
+            forHTTPHeaderField: "Content-Type"
+        )
+
+        target.headers?.forEach {
+            request.setValue(
+                $0.value,
+                forHTTPHeaderField: $0.key
+            )
+        }
+
+        request.httpBody = createMultipartBody(
+            params: params,
+            file: file,
+            boundary: boundary
+        )
+
+        NetworkLogger.logRequest(request)
+
+        let startDate = Date()
+
+        do {
+
+            let (data, response) = try await session.data(
+                for: request
+            )
+
+            let duration = Date().timeIntervalSince(startDate)
+
+            NetworkLogger.logResponse(
+                data: data,
+                response: response,
+                error: nil,
+                duration: duration
+            )
+
+            try validateResponse(response)
+
+            return try decode(
+                data: data,
+                model: responseModel
+            )
+
+        } catch {
+
+            let duration = Date().timeIntervalSince(startDate)
+
+            NetworkLogger.logResponse(
+                data: nil,
+                response: nil,
+                error: error,
+                duration: duration
+            )
+
+            throw error
         }
     }
-    
-    
-    private func handleResponse<M:Codable>(Target:T,ClassName:M.Type,response: DataResponse<M, AFError>) -> Future<M,NSError> {
-        return Future { promise in
-            
-            switch response.result {
-                
-            case .success(_):
-                guard let theJSONData =  response.data else {
-                    // ADD Custom Error
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.message1])
-                    promise(.failure(error))
-                    return
+}
+
+// MARK: - Helpers
+
+private extension BaseAPI {
+
+    func buildRequest(
+        target: T
+    ) throws -> URLRequest {
+
+        guard let url = URL(
+            string: target.baseURL.rawValue + target.path.rawValue
+        ) else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+
+        request.httpMethod = target.method.rawValue
+
+        request.timeoutInterval = 30
+
+        target.headers?.forEach {
+            request.setValue(
+                $0.value,
+                forHTTPHeaderField: $0.key
+            )
+        }
+
+        switch target.task {
+
+        case .requestPlain:
+            break
+
+        case .requestParameters(
+            let parameters,
+            let encoding
+        ):
+
+            if encoding is JSONEncoding {
+
+                request.setValue(
+                    "application/json",
+                    forHTTPHeaderField: "Content-Type"
+                )
+
+                request.httpBody = try JSONSerialization.data(
+                    withJSONObject: parameters
+                )
+
+            } else {
+
+                var components = URLComponents(
+                    url: url,
+                    resolvingAgainstBaseURL: false
+                )
+
+                components?.queryItems = parameters.map {
+
+                    URLQueryItem(
+                        name: $0.key,
+                        value: "\($0.value)"
+                    )
                 }
-                
-                if let string = String(data: theJSONData, encoding: .utf8) {
-                   print(string) // Prints the string representation of the data
-                }
-                
-                guard let response = try? response.result.get() else {
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.message1])
-                    promise(.failure(error))
-                    
-                    return
-                }
-                
-                promise(.success(response))
-                
-            case .failure(let e):
-                if e.isSessionTaskError,
-                   let urlError = e.underlyingError as? URLError,
-                   urlError.code == .timedOut {
-                    // Handle timeout error
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: ErrorMessage.message2])
-                    promise(.failure(error))
-                } else {
-                    // Handle other errors
-                    let error = NSError(domain: Target.baseURL.rawValue, code: 0, userInfo: [NSLocalizedDescriptionKey: e.localizedDescription])
-                    promise(.failure(error))
-                }
+
+                request.url = components?.url
             }
         }
-        
+
+        return request
     }
-    
-    
-    
-    private func buildParams(task: ParamsTask) -> ([String:Any], ParameterEncoding) {
-        switch task {
-        case .requestPlain:
-            return ([:] , URLEncoding.default)
-        case .requestParameters(parameters: let parameters, encoding: let encoding):
-            return (parameters,encoding)
+
+    // MARK: - Decode
+
+    func decode<M: Decodable>(
+        data: Data,
+        model: M.Type
+    ) throws -> M {
+
+        do {
+
+            let decoder = JSONDecoder()
+
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+            return try decoder.decode(
+                model,
+                from: data
+            )
+
+        } catch {
+
+            throw APIError.decodingError
+        }
+    }
+
+    // MARK: - Validate
+
+    func validateResponse(
+        _ response: URLResponse
+    ) throws {
+
+        guard let response = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        switch response.statusCode {
+
+        case 200...299:
+            break
+
+        case 401:
+            throw APIError.unauthorized
+
+        case 500...599:
+            throw APIError.serverError
+
+        default:
+            throw APIError.unknown
+        }
+    }
+
+    // MARK: - Multipart
+
+    func createMultipartBody(
+        params: [String: Any]?,
+        file: FileUpload,
+        boundary: String
+    ) -> Data {
+
+        var body = Data()
+
+        let lineBreak = "\r\n"
+
+        // Parameters
+
+        params?.forEach { key, value in
+
+            body.append("--\(boundary)\(lineBreak)")
+
+            body.append(
+                "Content-Disposition: form-data; name=\"\(key)\"\(lineBreak + lineBreak)"
+            )
+
+            body.append("\(value)\(lineBreak)")
+        }
+
+        // File
+
+        body.append("--\(boundary)\(lineBreak)")
+
+        body.append(
+            "Content-Disposition: form-data; name=\"\(file.name)\"; filename=\"\(file.fileName)\"\(lineBreak)"
+        )
+
+        body.append(
+            "Content-Type: \(file.mimeType)\(lineBreak + lineBreak)"
+        )
+
+        body.append(file.data)
+
+        body.append(lineBreak)
+
+        body.append("--\(boundary)--\(lineBreak)")
+
+        return body
+    }
+}
+
+// MARK: - Data Extension
+
+extension Data {
+
+    mutating func append(
+        _ string: String
+    ) {
+
+        if let data = string.data(
+            using: .utf8
+        ) {
+            append(data)
         }
     }
 }

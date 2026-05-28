@@ -1,5 +1,5 @@
 //
-//  AuthUseCases.swift
+//  AuthRepositoryProtocol.swift
 //  RecordNote
 //
 //  Created by Mohamed Ali on 27/05/2026.
@@ -11,5 +11,11 @@ protocol AuthRepositoryProtocol {
     func login(
         email: String,
         password: String
-    ) async throws -> UserLoginDTO
+    ) async throws -> Bool
+    
+    func signup(
+        fullName: String,
+        email: String,
+        password: String
+    ) async throws -> String
 }

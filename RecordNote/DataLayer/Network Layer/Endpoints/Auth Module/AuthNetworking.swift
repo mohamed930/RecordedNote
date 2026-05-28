@@ -14,35 +14,35 @@ enum AuthNetworking {
 }
 
 extension AuthNetworking: TargetType {
-    var baseURL: Api {
+    var baseURL: ApiUrl {
         return .baseUrl
     }
     
-    var path: Api {
+    var path: ApiUrl {
         switch self {
-            case .signUp:
-                return .signup
-            case .login:
-                return .signin
+        case .signUp:
+            return .signup
+        case .login:
+            return .signin
         }
     }
     
     var method: HTTPMethod {
         switch self {
-            case .signUp:
-                return .post
-            case .login:
-                return .post
+        case .signUp:
+            return .post
+        case .login:
+            return .post
         }
     }
     
     var task: ParamsTask {
         switch self {
-            case .signUp(let data):
-                return .requestParameters(parameters: data.params, encoding: JSONEncoding.default)
-            
-            case .login(let data):
-                return .requestParameters(parameters: data.loginParams, encoding: URLEncoding.default)
+        case .signUp(let data):
+            return .requestParameters(parameters: data.params, encoding: JSONEncoding.default)
+        
+        case .login(let data):
+            return .requestParameters(parameters: data.loginParams, encoding: URLEncoding.default)
         }
     }
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum signTypeValues: String {
+enum SignTypeValues: String {
     case phone
     case email = "mail"
 }
@@ -15,13 +15,13 @@ enum signTypeValues: String {
 
 struct UserInputModel {
     var name: String
-    var signType: signTypeValues
+    var signType: SignTypeValues
     var email: String?
     var phoneNumber: String?
     var password: String?
     var firebaseToken: String = ""
     
-    init(name: String, signType: signTypeValues, email: String? = nil, phoneNumber: String? = nil, password: String? = nil, firebaseToken: String) {
+    init(name: String, signType: SignTypeValues, email: String? = nil, phoneNumber: String? = nil, password: String? = nil, firebaseToken: String) {
         self.name = name
         self.signType = signType
         self.email = email
@@ -30,7 +30,7 @@ struct UserInputModel {
         self.firebaseToken = firebaseToken
     }
     
-    init(signType: signTypeValues,phoneNumber: String?,email: String?,password: String?) {
+    init(signType: SignTypeValues,phoneNumber: String?,email: String?,password: String?) {
         self.signType = signType
         switch signType {
         case .phone:

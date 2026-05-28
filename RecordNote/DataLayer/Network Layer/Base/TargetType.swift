@@ -22,8 +22,8 @@ enum ParamsTask {
 }
 
 protocol TargetType {
-    var baseURL: Api { get }
-    var path: Api { get }
+    var baseURL: ApiUrl { get }
+    var path: ApiUrl { get }
     var method: HTTPMethod { get }
     var task: ParamsTask { get }
     var headers: [String:String]? { get }

@@ -13,7 +13,7 @@ class ShardCheckConnection {
     
     private var connection = CheckConnection()
     private var cancellable = Set<AnyCancellable>()
-    var connectionStatusObservable: AnyPublisher<CheckConnection.connectionStatus,Never> {
+    var connectionStatusObservable: AnyPublisher<CheckConnection.ConnectionStatus,Never> {
         return connection.connectionStatusObservable.eraseToAnyPublisher()
     }
     
