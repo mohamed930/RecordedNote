@@ -24,4 +24,10 @@ class SignupCoordinator: BaseCoordinator {
     func moveToLoginScreen() {
         navigationController.popViewController(animated: true)
     }
+    
+    func moveToTermsAndConditions(link: String,title: String) {
+        let coordinator = CustomWebViewCoordinator(navigationController: navigationController, link: link, title: title)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
 }

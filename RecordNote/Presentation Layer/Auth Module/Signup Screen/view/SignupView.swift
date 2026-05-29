@@ -87,7 +87,7 @@ struct SignupView: View {
                                 .foregroundStyle(Color._6_A_7282)
                                  
                              Button {
-                                 
+                                 viewModel.moveToTermsAndConditions()
                              } label: {
                                  Text("Terms of Service")
                                      .setFont(fontName: .mainFontSemiBold, size: 12)
@@ -99,7 +99,7 @@ struct SignupView: View {
                                 .foregroundStyle(Color._6_A_7282)
                             
                             Button {
-                                
+                                viewModel.moveToPrivacyPolicy()
                             } label: {
                                 Text("Privacy Policy")
                                     .setFont(fontName: .mainFontSemiBold, size: 12)

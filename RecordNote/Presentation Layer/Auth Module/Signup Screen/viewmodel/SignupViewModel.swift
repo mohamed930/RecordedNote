@@ -55,6 +55,14 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
         isSaved.toggle()
     }
     
+    func moveToTermsAndConditions() {
+        coordinator.moveToTermsAndConditions(link: "https://www.google.com", title: "Terms of Service")
+    }
+    
+    func moveToPrivacyPolicy() {
+        coordinator.moveToTermsAndConditions(link: "https://www.twitch.tv", title: "Privacy Policy")
+    }
+    
     func signUpOperation() async {
         
         IQKeyboardManager.shared.resignFirstResponder()
@@ -82,6 +90,7 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
             errorFlag = true
         }
     }
+    
     
     func signUpWithGoogleAction() {
         
