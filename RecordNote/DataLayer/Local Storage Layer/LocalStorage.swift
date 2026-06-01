@@ -29,6 +29,7 @@ enum LocalStorageKeys: String, LocalStorageKeysProtocol {
     case appleLanguages
     case firstTime
     case fullName
+    case userGoogle
 }
 
 

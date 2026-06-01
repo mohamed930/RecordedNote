@@ -106,7 +106,9 @@ struct LoginView: View {
                         title: "Google",
                         image: .google
                     ) {
-                        viewModel.loginWithGoogleAction()
+                        Task {
+                            await viewModel.loginWithGoogleAction()
+                        }
                     }
                     
                     SocialButton(

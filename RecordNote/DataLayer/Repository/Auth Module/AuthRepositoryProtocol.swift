@@ -18,4 +18,8 @@ protocol AuthRepositoryProtocol {
         email: String,
         password: String
     ) async throws -> String
+    
+    func loginWithGoogle() async throws -> Bool
+    
+    func signupWithGoogle() async throws -> Bool
 }

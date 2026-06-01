@@ -142,7 +142,9 @@ struct SignupView: View {
                             title: "Google",
                             image: .google
                         ) {
-                            viewModel.signUpWithGoogleAction()
+                            Task {
+                                await viewModel.signUpWithGoogleAction()
+                            }
                         }
                         
                         SocialButton(

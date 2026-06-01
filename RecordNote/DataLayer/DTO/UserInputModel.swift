@@ -79,11 +79,22 @@ struct UserInputModel {
                 "password": password ?? ""
             ]
         case .email:
-            return [
+            var params: [String: Any] = [String:Any]()
+            
+            params = [
                 "sign_type": signType.rawValue,
-                "email": email ?? "",
-                "password": "111",
+                "email": email ?? ""
             ]
+            
+            if !firebaseToken.isEmpty {
+                params["firebase_token"] = firebaseToken
+                params["password"] = ""
+            }
+            else {
+                params["password"] = password
+            }
+            
+            return params
         }
     }
 }

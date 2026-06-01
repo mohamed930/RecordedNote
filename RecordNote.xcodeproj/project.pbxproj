@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D33218FD2FCE0311001F605A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D33218FC2FCE0311001F605A /* GoogleSignInSwift */; };
 		D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */; };
 		D3BB312B2FC71650000A8DFD /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312A2FC71650000A8DFD /* Reachability */; };
 		D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312D2FC71764000A8DFD /* PlainPing */; };
@@ -36,22 +37,9 @@
 		D38850C62FC5D1ED001D8A77 /* RecordNoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordNoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D38850CE2FC5D1ED001D8A77 /* Exceptions for "RecordNote" folder in "RecordNote" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Assests/Info.plist,
-			);
-			target = D38850A52FC5D1EC001D8A77 /* RecordNote */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D38850A82FC5D1EC001D8A77 /* RecordNote */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D38850CE2FC5D1ED001D8A77 /* Exceptions for "RecordNote" folder in "RecordNote" target */,
-			);
 			path = RecordNote;
 			sourceTree = "<group>";
 		};
@@ -72,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D33218FD2FCE0311001F605A /* GoogleSignInSwift in Frameworks */,
 				D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */,
 				D3BB31312FC71883000A8DFD /* Alamofire in Frameworks */,
 				D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */,
@@ -141,6 +130,7 @@
 				D3BB312A2FC71650000A8DFD /* Reachability */,
 				D3BB312D2FC71764000A8DFD /* PlainPing */,
 				D3BB31302FC71883000A8DFD /* Alamofire */,
+				D33218FC2FCE0311001F605A /* GoogleSignInSwift */,
 			);
 			productName = RecordNote;
 			productReference = D38850A62FC5D1EC001D8A77 /* RecordNote.app */;
@@ -229,6 +219,7 @@
 				D3BB31292FC71650000A8DFD /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 				D3BB312C2FC71764000A8DFD /* XCRemoteSwiftPackageReference "PlainPing" */,
 				D3BB312F2FC71883000A8DFD /* XCRemoteSwiftPackageReference "Alamofire" */,
+				D33218FB2FCE0311001F605A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D38850A72FC5D1EC001D8A77 /* Products */;
@@ -335,7 +326,7 @@
 				DEVELOPMENT_TEAM = X4YZSY77G5;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RecordNote/Assests/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Recorded note";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -373,7 +364,7 @@
 				DEVELOPMENT_TEAM = X4YZSY77G5;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RecordNote/Assests/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Recorded note";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -648,6 +639,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D33218FB2FCE0311001F605A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
 		D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -683,6 +682,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D33218FC2FCE0311001F605A /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D33218FB2FCE0311001F605A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;

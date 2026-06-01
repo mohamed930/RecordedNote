@@ -73,8 +73,21 @@ class LoginViewModel: NSObject, ObservableObject {
         }
     }
     
-    func loginWithGoogleAction() {
-        
+    func loginWithGoogleAction() async {
+        do {
+            let result = try await useCases.singInGoogle()
+            
+            if result {
+                // MARK: - TODO: - Add navigation to Home Screen
+                errorFlag = false
+            }
+            else {
+                errorFlag = true
+            }
+            
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     func loginWithAppleAction() {

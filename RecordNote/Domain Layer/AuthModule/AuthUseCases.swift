@@ -21,4 +21,12 @@ final class AuthUseCase {
     func signup(name: String,email: String, password: String) async throws -> String {
         try await repository.signup(fullName: name, email: email, password: password)
     }
+    
+    func singInGoogle() async throws -> Bool {
+        try await repository.loginWithGoogle()
+    }
+    
+    func singUpGoogle() async throws -> Bool {
+        try await repository.signupWithGoogle()
+    }
 }
