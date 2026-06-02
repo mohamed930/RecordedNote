@@ -30,6 +30,7 @@ enum LocalStorageKeys: String, LocalStorageKeysProtocol {
     case firstTime
     case fullName
     case userGoogle
+    case appleEmail
 }
 
 

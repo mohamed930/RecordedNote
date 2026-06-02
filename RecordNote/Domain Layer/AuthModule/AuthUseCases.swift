@@ -29,4 +29,12 @@ final class AuthUseCase {
     func singUpGoogle() async throws -> Bool {
         try await repository.signupWithGoogle()
     }
+    
+    func singInApple() async throws -> Bool {
+        try await repository.singInWtihApple()
+    }
+    
+    func singUpApple() async throws -> Bool {
+        try await repository.singOutWtihApple()
+    }
 }

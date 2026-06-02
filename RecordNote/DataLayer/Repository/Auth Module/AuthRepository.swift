@@ -8,10 +8,13 @@
 import UIKit
 import GoogleSignInSwift
 import GoogleSignIn
+import AuthenticationServices
 
-final class AuthRepository: AuthRepositoryProtocol {
+final class AuthRepository: NSObject , AuthRepositoryProtocol {
+    
     private let service: AuthAPI
     private let local: LocalStorageProtocol = LocalStorage()
+    private var continuation: CheckedContinuation<AppleUserEntity, Error>?
     
     init(service: AuthAPI) {
         self.service = service
@@ -121,6 +124,54 @@ final class AuthRepository: AuthRepositoryProtocol {
             return false
         }
     }
+    
+    func singInWtihApple() async throws -> Bool {
+        do {
+            let appleUssr = try await checkAppleAuth()
+            
+            var email: String = ""
+            
+            if let appleEmail = appleUssr.email, !appleEmail.isEmpty {
+                email = appleEmail
+            }
+            else {
+                if let savedEmail: String = local.value(key: LocalStorageKeys.appleEmail) {
+                    email = savedEmail
+                }
+                else {
+                    return false
+                }
+            }
+            
+            let response = try await loginWithGoogle(email: email, token: appleUssr.identityToken)
+            
+            return response
+            
+        } catch {
+            print(error.localizedDescription)
+            
+            return false
+        }
+    }
+    
+    func singOutWtihApple() async throws -> Bool {
+        do {
+            let appleUssr = try await checkAppleAuth()
+            
+            if let email = appleUssr.email, !email.isEmpty {
+                local.write(key: LocalStorageKeys.appleEmail, value: email)
+            }
+            
+            let response = try await signupWithGoogle(fullName: "\(appleUssr.firstName ?? "") \(appleUssr.lastName ?? "")", email: appleUssr.email ?? "", token: appleUssr.identityToken)
+            
+            return response.isEmpty
+            
+        } catch {
+            print(error.localizedDescription)
+            
+            return false
+        }
+    }
 }
 
 extension AuthRepository {
@@ -149,4 +200,96 @@ extension AuthRepository {
         )
     }
     
+    private func checkAppleAuth() async throws -> AppleUserEntity {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            self.continuation = continuation
+
+            let request = ASAuthorizationAppleIDProvider()
+                .createRequest()
+
+            request.requestedScopes = [
+                .fullName,
+                .email
+            ]
+
+            let controller = ASAuthorizationController(
+                authorizationRequests: [request]
+            )
+
+            controller.delegate = self
+            controller.presentationContextProvider = self
+
+            controller.performRequests()
+        }
+    }
+    
+}
+
+extension AuthRepository: ASAuthorizationControllerDelegate,ASAuthorizationControllerPresentationContextProviding {
+
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithAuthorization authorization: ASAuthorization
+    ) {
+
+        guard let credential =
+                authorization.credential
+                as? ASAuthorizationAppleIDCredential
+        else {
+            continuation?.resume(
+                throwing: APIError.unknown
+            )
+            return
+        }
+
+        guard let tokenData = credential.identityToken,
+              let token = String(
+                data: tokenData,
+                encoding: .utf8
+              )
+        else {
+            continuation?.resume(
+                throwing: APIError.unknown
+            )
+            return
+        }
+
+        let user = AppleUserEntity(
+            userIdentifier: credential.user,
+            email: credential.email,
+            firstName: credential.fullName?.givenName,
+            lastName: credential.fullName?.familyName,
+            identityToken: token
+        )
+
+        continuation?.resume(
+            returning: user
+        )
+
+        continuation = nil
+    }
+
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithError error: Error
+    ) {
+
+        continuation?.resume(
+            throwing: error
+        )
+
+        continuation = nil
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        guard let windowScene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+              let window = windowScene.windows.first(where: \.isKeyWindow) else {
+
+            return UIWindow()
+        }
+
+        return window
+    }
 }

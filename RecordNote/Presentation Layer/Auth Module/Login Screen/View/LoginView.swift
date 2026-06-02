@@ -115,7 +115,9 @@ struct LoginView: View {
                         title: "Apple",
                         image: .apple
                     ) {
-                        viewModel.loginWithAppleAction()
+                        Task {
+                            await viewModel.loginWithAppleAction()
+                        }
                     }
                 }
                 .padding(.bottom,12)

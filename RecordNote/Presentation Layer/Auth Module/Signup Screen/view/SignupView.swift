@@ -151,7 +151,9 @@ struct SignupView: View {
                             title: "Apple",
                             image: .apple
                         ) {
-                            viewModel.signUpWithAppleAction()
+                            Task {
+                                await viewModel.signUpWithAppleAction()
+                            }
                         }
                     }
                     .padding(.bottom,12)

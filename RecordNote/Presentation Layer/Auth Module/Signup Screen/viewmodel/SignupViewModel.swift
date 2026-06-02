@@ -109,7 +109,20 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
         }
     }
     
-    func signUpWithAppleAction() {
-        
+    func signUpWithAppleAction() async {
+        do {
+            let result = try await useCases.singUpApple()
+            
+            if result {
+                // MARK: - TODO: - Add navigation to Home Screen
+                errorFlag = false
+            }
+            else {
+                errorFlag = true
+            }
+            
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

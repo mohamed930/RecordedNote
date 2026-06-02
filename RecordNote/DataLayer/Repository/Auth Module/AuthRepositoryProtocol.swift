@@ -22,4 +22,8 @@ protocol AuthRepositoryProtocol {
     func loginWithGoogle() async throws -> Bool
     
     func signupWithGoogle() async throws -> Bool
+    
+    func singInWtihApple() async throws -> Bool
+    
+    func singOutWtihApple() async throws -> Bool
 }
