@@ -18,7 +18,7 @@ struct HeaderComponets: View {
         ZStack {
             Color.EDE_9_FE
             
-            VStack(spacing: 10) {
+            VStack(spacing: 20) {
                 HStack(spacing: 3) {
                     
                     Button {
@@ -39,9 +39,13 @@ struct HeaderComponets: View {
                         .resizable()
                         .frame(width: 13,height: 13)
                 }
-                .padding(.top,32)
+                .padding(.top,30)
                 
                 Image(.record)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 130)
+                
             }
             .padding(.horizontal,24)
         }
