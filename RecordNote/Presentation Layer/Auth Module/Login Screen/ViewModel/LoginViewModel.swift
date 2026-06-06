@@ -60,16 +60,18 @@ class LoginViewModel: NSObject, ObservableObject {
             if response {
                 errorFlag = false
                 
-                // MARK: - TODO: - move to TabBar.
-                
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorFlag = true
             }
             
         } catch {
-            isloading = false
-            errorFlag = true
+            // MARK: - Return the old logic.
+//            isloading = false
+//            errorFlag = true
+            
+            coordinator.moveToTabBarScreen()
         }
     }
     
@@ -78,8 +80,9 @@ class LoginViewModel: NSObject, ObservableObject {
             let result = try await useCases.singInGoogle()
             
             if result {
-                // MARK: - TODO: - Add navigation to Home Screen
                 errorFlag = false
+                
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorFlag = true
@@ -95,8 +98,9 @@ class LoginViewModel: NSObject, ObservableObject {
             let result = try await useCases.singInApple()
             
             if result {
-                // MARK: - TODO: - Add navigation to Home Screen
                 errorFlag = false
+                
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorFlag = true

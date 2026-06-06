@@ -30,4 +30,10 @@ class SignupCoordinator: BaseCoordinator {
         add(coordinator: coordinator)
         coordinator.start()
     }
+    
+    func moveToTabBarScreen() {
+        let coordinator = TabBarCoordinator(navigationController: navigationController)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
 }

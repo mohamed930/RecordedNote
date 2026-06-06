@@ -76,6 +76,7 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
             
             if response.isEmpty {
                 errorFlag = false
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorMessage = response
@@ -97,8 +98,8 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
             let result = try await useCases.singUpGoogle()
             
             if result {
-                // MARK: - TODO: - Add navigation to Home Screen
                 errorFlag = false
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorFlag = true
@@ -114,8 +115,8 @@ class SignupViewModel: NSObject, ObservableObject, ErrorProtocol {
             let result = try await useCases.singUpApple()
             
             if result {
-                // MARK: - TODO: - Add navigation to Home Screen
                 errorFlag = false
+                coordinator.moveToTabBarScreen()
             }
             else {
                 errorFlag = true

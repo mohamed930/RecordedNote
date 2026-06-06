@@ -17,7 +17,11 @@ final class AppCoordinator: BaseCoordinator {
     override func start() {
         let navigationController = UINavigationController()
         
-        let coordinator = LoginCoordinator(navigationController: navigationController)
+//        let coordinator = LoginCoordinator(navigationController: navigationController)
+//        add(coordinator: coordinator)
+//        coordinator.start()
+
+        let coordinator = TabBarCoordinator(navigationController: navigationController)
         add(coordinator: coordinator)
         coordinator.start()
         
