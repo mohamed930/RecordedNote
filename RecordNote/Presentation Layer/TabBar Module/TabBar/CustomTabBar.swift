@@ -23,13 +23,15 @@ class CustomTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addTopBorder(color: .F_3_F_4_F_6, height: 1)
+        
         // Optional: Add a button in the center
         centerButton = UIButton(type: .custom)
 //        let tabBarWidth = self.tabBar.frame.width
         let tabBarHeight = self.tabBar.frame.height
-        let buttonSize: CGFloat = 56.0
-        let yOffset = (tabBarHeight - buttonSize) / 2.0
-        centerButton.frame = CGRect(x: (self.tabBar.frame.width - 56) / 2, y: yOffset, width: buttonSize, height: buttonSize)
+        let buttonSize: CGFloat = 100.0
+        let yOffset = (tabBarHeight - buttonSize) / 1.5
+        centerButton.frame = CGRect(x: (self.tabBar.frame.width - 100) / 2, y: yOffset, width: buttonSize, height: buttonSize)
         centerButton.setImage(UIImage.record, for: .normal)
         centerButton.addTarget(self, action: #selector(centerButtonTapped), for: .touchUpInside)
 //        centerButton.layer.cornerRadius = 25.0
@@ -64,13 +66,28 @@ class CustomTabBarController: UITabBarController {
         selectedIndex = tabIndex
         
         tabBar.tintColor = ._7_C_3_AED
-
+        tabBar.backgroundColor = .FAFAFA
+        
         
     }
 
     @objc private func centerButtonTapped() {
         // Handle the center button tap event
         coordinator?.moveToRecordScreen()
+    }
+    
+    private func addTopBorder(color: UIColor, height: CGFloat) {
+        // Create a custom layer that spans the full width of the screen
+        let topBorder = CALayer()
+        topBorder.frame = CGRect(x: 0, y: 0, width: self.tabBar.frame.size.width, height: height)
+        topBorder.backgroundColor = color.cgColor
+        
+        // Remove the default system shadow line to prevent overlap
+        tabBar.shadowImage = UIImage()
+        tabBar.backgroundImage = UIImage()
+        
+        // Add the new top border layer
+        tabBar.layer.addSublayer(topBorder)
     }
     
 }
