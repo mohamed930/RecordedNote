@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
-struct MeetingNote: Identifiable {
-    let id = UUID()
-    let title: String
-    let date: Date
-    let indicatorColor: Color
-}
-
 struct MeetingNoteCard: View {
     
     let note: MeetingNote
@@ -72,6 +63,7 @@ struct MeetingNoteCard: View {
 #Preview("Meeting Note Card") {
     MeetingNoteCard(
         note: .init(
+            id: "",
             title: "Project Meeting Notes",
             date: Date(),
             indicatorColor: .purple

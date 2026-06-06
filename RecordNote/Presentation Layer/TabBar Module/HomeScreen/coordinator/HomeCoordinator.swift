@@ -19,7 +19,7 @@ final class HomeCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        let viewModel = HomeViewModel(coordinator: self)
+        let viewModel = HomeViewModel(coordinator: self, useCases: NotesUseCases(repository: HomeRespository(realm: RealmStorage(), local: LocalStorage())))
         let viewController = HomeViewController(viewModel: viewModel)
         viewController.tabBarItem =  UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.setViewControllers([viewController], animated: true)

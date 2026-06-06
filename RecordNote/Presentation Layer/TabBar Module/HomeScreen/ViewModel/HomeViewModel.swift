@@ -8,27 +8,26 @@
 import Foundation
 import Combine
 import SwiftUI
+import RealmSwift
 
 final class HomeViewModel: ObservableObject {
+    
+    // MARK: - Published.
+    @Published var userName: String = ""
+    @Published var notes: [MeetingNote] = []
+    @Published var isEmpty: Bool = true
+    
+    // MARK: - Objects.
     private weak var coordinator: HomeCoordinator?
-    
-    @Published var userName: String = "Mohamed Ali"
-    
-    @Published var notes: [MeetingNote] = [
-                                                .init(
-                                                    title: "Project Meeting Notes",
-                                                    date: Date(),
-                                                    indicatorColor: .purple
-                                                ),
-                                                .init(
-                                                    title: "Sprint Planning",
-                                                    date: Date().addingTimeInterval(3600),
-                                                    indicatorColor: .blue
-                                                )
-                                            ]
+    var useCases: NotesUseCases
 
-    init(coordinator: HomeCoordinator) {
+    init(coordinator: HomeCoordinator,useCases:NotesUseCases) {
         self.coordinator = coordinator
+        self.useCases = useCases
+        
+        print(Realm.Configuration.defaultConfiguration.fileURL?.path ?? "")
+        fetchNotes()
+        fetchUerName()
         
     }
     
@@ -39,5 +38,21 @@ final class HomeViewModel: ObservableObject {
     
     func seeAllButtonAction() {
         
+    }
+    
+    func fetchNotes() {
+        let fetchedNotes = useCases.fetchAllNotes()
+        
+        if fetchedNotes.isEmpty {
+            isEmpty = true
+        }
+        else {
+            isEmpty = false
+            notes = fetchedNotes
+        }
+    }
+    
+    func fetchUerName() {
+        userName = useCases.fetchUserName()
     }
 }

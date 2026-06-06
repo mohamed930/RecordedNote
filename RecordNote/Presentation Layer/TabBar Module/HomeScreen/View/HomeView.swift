@@ -60,34 +60,48 @@ struct HomeView: View {
             .frame(maxWidth: .infinity)
             .padding(.bottom,60)
             
-            HStack {
-                Text("Recent Notes")
-                    .setFont(fontName: .mainFontBold, size: 18)
-                
-                Spacer()
-                
-                Button {
-                    viewModel.seeAllButtonAction()
-                } label: {
-                    HStack(spacing: 2) {
-                        Text("See All")
-                            .setFont(fontName: .mainFont, size: 14)
-                            .foregroundStyle(Color._7_C_3_AED)
-                        
-                        Image(.moreButton)
-                    }
-                }
-
-            }
-            .padding(.bottom,16)
             
-            ScrollView {
-                LazyVStack(spacing: 12) {
-                    ForEach(viewModel.notes) { note in
-                        MeetingNoteCard(note: note)
+            if viewModel.isEmpty {
+                VStack(alignment: .center) {
+                    
+                    Text("There is no notes avaliable")
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxHeight: .infinity)
+            }
+            else {
+                HStack {
+                    Text("Recent Notes")
+                        .setFont(fontName: .mainFontBold, size: 18)
+                    
+                    Spacer()
+                    
+                    Button {
+                        viewModel.seeAllButtonAction()
+                    } label: {
+                        HStack(spacing: 2) {
+                            Text("See All")
+                                .setFont(fontName: .mainFont, size: 14)
+                                .foregroundStyle(Color._7_C_3_AED)
+                            
+                            Image(.moreButton)
+                        }
+                    }
+
+                }
+                .padding(.bottom,16)
+                
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.notes) { note in
+                            MeetingNoteCard(note: note)
+                        }
                     }
                 }
             }
+            
+            
             
             Spacer()
         }
@@ -98,6 +112,6 @@ struct HomeView: View {
 
 #Preview {
     HomeView(
-        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()))
+        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(repository: HomeRespository(realm: RealmStorage(), local: LocalStorage())))
     )
 }
