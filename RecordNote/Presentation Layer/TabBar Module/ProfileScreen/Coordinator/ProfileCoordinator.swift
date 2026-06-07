@@ -19,9 +19,15 @@ final class ProfileCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = ProfileViewModel(coordinator: self)
+        let viewModel      = ProfileViewModel(coordinator: self, useCase: ProfileUseCases(respotery: HomeRespository(realm: RealmStorage(), local: LocalStorage())))
         let viewController = ProfileViewController(viewModel: viewModel)
         viewController.tabBarItem = UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    func moveToLoginScreen() {
+        let coordinator = LoginCoordinator(navigationController: navigationController)
+        add(coordinator: coordinator)
+        coordinator.start()
     }
 }

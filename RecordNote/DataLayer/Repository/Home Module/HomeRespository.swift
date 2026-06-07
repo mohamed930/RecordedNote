@@ -18,9 +18,9 @@ class HomeRespository: HomeRespositoryProtocol {
     }
     
     func fetchNotes() -> [MeetingNote] {
-        var allNotes: [NoteRealModelInfoModel] = realm.objects()
+        let allNotes: [NoteRealModelInfoModel] = realm.objects()
         
-        var noteDTo = allNotes.prefix(5).map({ $0.convertToDTO() })
+        let noteDTo = allNotes.prefix(5).map({ $0.convertToDTO() })
         
         return noteDTo
     }
@@ -30,4 +30,39 @@ class HomeRespository: HomeRespositoryProtocol {
         return userName
     }
     
+    func fetchEmail() -> String? {
+        let email: String? = local.value(key: LocalStorageKeys.email)
+        return email
+    }
+    
+    func deleteUser() -> Bool {
+        local.remove(key: LocalStorageKeys.fullName)
+        local.remove(key: LocalStorageKeys.appleEmail)
+        local.remove(key: LocalStorageKeys.userGoogle)
+        local.remove(key: LocalStorageKeys.firstTime)
+        
+        return true
+    }
+    
+    func fetchNotesSavedSize() -> String {
+        let notes: [NoteRealModelInfoModel] = realm.objects()
+
+        let totalBytes = notes.reduce(0) { result, note in
+            let textBytes =
+                note.name.utf8.count +
+                note.summary.utf8.count +
+                note.transcript.utf8.count
+
+            let audioBytes = note.audio?.count ?? 0
+
+            return result + textBytes + audioBytes
+        }
+
+        let formatted = ByteCountFormatter.string(
+            fromByteCount: Int64(totalBytes),
+            countStyle: .file
+        )
+        
+        return formatted
+    }
 }

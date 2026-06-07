@@ -10,4 +10,7 @@ import Foundation
 protocol HomeRespositoryProtocol {
     func fetchNotes() -> [MeetingNote]
     func fetchUserName() -> String?
+    func deleteUser() -> Bool
+    func fetchEmail() -> String?
+    func fetchNotesSavedSize() -> String
 }

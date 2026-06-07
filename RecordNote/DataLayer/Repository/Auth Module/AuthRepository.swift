@@ -31,6 +31,7 @@ final class AuthRepository: NSObject , AuthRepositoryProtocol {
             
             local.write(key: LocalStorageKeys.firstTime, value: data.partnerToken)
             local.write(key: LocalStorageKeys.fullName, value: data.name)
+            local.write(key: LocalStorageKeys.email, value: data.mail)
             
             return true
         }
