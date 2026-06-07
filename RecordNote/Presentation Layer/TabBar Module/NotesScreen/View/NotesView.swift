@@ -19,8 +19,46 @@ struct NotesView: View {
     }
 
     var body: some View {
-        VStack {
-            Text("Notes view")
+        ZStack {
+            Color.FAFAFA
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                ZStack {
+                    
+                    Color.white
+                    
+                    Text("All Notes")
+                        .setFont(fontName: .mainFontBold, size: 20)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal,16)
+                }
+                .frame(height: 53)
+                .padding(.bottom,16)
+                
+                NotesFilterView(selectedFilter: $viewModel.selectedNoteFilters)
+                    .padding(.horizontal,16)
+                    .padding(.bottom,16)
+                
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.notes,id: \.id) { note in
+                            MeetingNoteCardComponets(attributes: note)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                }
+                
+                Spacer()
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            Button {
+                viewModel.addButtonAction()
+            } label: {
+                Image(.addButton)
+            }
+//            .padding(.trailing, 12)
         }
     }
 }
