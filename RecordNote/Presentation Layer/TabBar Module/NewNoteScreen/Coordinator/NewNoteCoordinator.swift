@@ -9,15 +9,23 @@ import UIKit
 
 final class NewNoteCoordinator: BaseCoordinator {
     var navigationController: UINavigationController
+    var cameFromTabBar: Bool
 
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController,cameFromTabBar: Bool = true) {
         self.navigationController = navigationController
+        self.cameFromTabBar = cameFromTabBar
         
     }
 
     override func start() {
         let viewModel = NewNoteViewModel(coordinator: self)
         let viewController = NewNoteViewController(viewModel: viewModel)
-        navigationController.setViewControllers([viewController], animated: true)
+        if cameFromTabBar {
+            navigationController.setViewControllers([viewController], animated: true)
+        }
+        else {
+            viewController.hidesBottomBarWhenPushed = true
+            navigationController.pushViewController(viewController, animated: true)
+        }
     }
 }

@@ -33,6 +33,6 @@ final class NotesViewModel: ObservableObject {
     }
     
     func addButtonAction() {
-        
+        coordinator?.moveToNewNoteScreen()
     }
 }

@@ -24,4 +24,10 @@ final class NotesCoordinator: BaseCoordinator {
         viewController.tabBarItem = UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.pushViewController(viewController, animated: true)
     }
+    
+    func moveToNewNoteScreen() {
+        let coordinator = NewNoteCoordinator(navigationController: navigationController,cameFromTabBar: false)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
 }
