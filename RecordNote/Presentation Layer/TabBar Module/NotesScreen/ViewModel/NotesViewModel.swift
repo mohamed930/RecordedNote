@@ -10,16 +10,28 @@ import Combine
 
 final class NotesViewModel: ObservableObject {
     private weak var coordinator: NotesCoordinator?
+    private let useCases: NotesUseCases
     
     // MARK: - Publishers.
-    @Published var selectedNoteFilters: NotesFilterValues = .all
-    @Published var notes: [MeetingNoteCardAttributes] = .dummyNotes
+    @Published var notes: [MeetingNoteCardAttributes] = []
+    @Published var selectedNoteFilters: NotesFilterValues = .all {
+        willSet {
+            notes = useCases.fetchFiltersNotes(filter: newValue)
+        }
+    }
 
-    init(coordinator: NotesCoordinator) {
+    init(coordinator: NotesCoordinator,useCases: NotesUseCases) {
         self.coordinator = coordinator
+        self.useCases = useCases
+        
+        fetchNotes()
     }
     
     // MARK: - Actions.
+    private func fetchNotes() {
+        notes = useCases.fetchNotes()
+    }
+    
     func addButtonAction() {
         
     }

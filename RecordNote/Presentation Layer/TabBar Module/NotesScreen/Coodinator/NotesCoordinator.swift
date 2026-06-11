@@ -19,7 +19,7 @@ final class NotesCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = NotesViewModel(coordinator: self)
+        let viewModel      = NotesViewModel(coordinator: self, useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
         let viewController = NotesViewController(viewModel: viewModel)
         viewController.tabBarItem = UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.pushViewController(viewController, animated: true)

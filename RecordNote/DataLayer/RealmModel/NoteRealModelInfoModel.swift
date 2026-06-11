@@ -24,6 +24,9 @@ class NoteRealModelInfoModel: Object {
 
     @Persisted
     var transcript: String = ""
+    
+    @Persisted
+    var isFav: Bool = false
 
     @Persisted
     var audio: Data?
@@ -36,6 +39,15 @@ class NoteRealModelInfoModel: Object {
                            title: self.name,
                            date: self.date,
                            indicatorColor: randomColor())
+    }
+    
+    func convertToMeetingNoteCardAttributes() -> MeetingNoteCardAttributes {
+        return MeetingNoteCardAttributes(id: self.id,
+                                         title: self.name,
+                                         date: formattedDate,
+                                         time: formattedTime,
+                                         indicatorColor: randomColor(),
+                                         isFavorite: self.isFav)
     }
     
     private let allColors: [Color] = [
@@ -59,6 +71,14 @@ class NoteRealModelInfoModel: Object {
         }
 
         return availableColors.removeFirst()
+    }
+    
+    private var formattedDate: String {
+        self.date.formatted(.dateTime.month(.abbreviated).day().year())
+    }
+    
+    private var formattedTime: String {
+        self.date.formatted(date: .omitted, time: .shortened)
     }
 }
 

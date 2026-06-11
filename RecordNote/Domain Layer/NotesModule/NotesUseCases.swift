@@ -8,10 +8,11 @@
 import Foundation
 
 final class NotesUseCases {
-    private let repository: HomeRespository
+    private let repository: HomeRespository = HomeRespository(realm: RealmStorage(), local: LocalStorage())
+    private let notesRespotery: NotesRespoteryProtocol
 
-    init(repository: HomeRespository) {
-        self.repository = repository
+    init(notesRespotery: NotesRespoteryProtocol) {
+        self.notesRespotery = notesRespotery
     }
 
     func fetchAllNotes() -> [MeetingNote] {
@@ -25,5 +26,12 @@ final class NotesUseCases {
         
         return userName
     }
+    
+    func fetchNotes() -> [MeetingNoteCardAttributes] {
+        notesRespotery.fetchNotes()
+    }
+    
+    func fetchFiltersNotes(filter: NotesFilterValues) -> [MeetingNoteCardAttributes] {
+        notesRespotery.filterNotes(filter: filter)
+    }
 }
-

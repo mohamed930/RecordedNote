@@ -16,6 +16,16 @@ struct MeetingNoteCardAttributes {
     
     var isFavorite: Bool = false
     var showsChevron: Bool = true
+    
+    init(id: String, title: String, date: String, time: String, indicatorColor: Color, isFavorite: Bool = false,showsChevron: Bool = true) {
+        self.id = id
+        self.title = title
+        self.date = date
+        self.time = time
+        self.indicatorColor = indicatorColor
+        self.isFavorite = isFavorite
+        self.showsChevron = showsChevron
+    }
 }
 
 extension Array where Element == MeetingNoteCardAttributes {

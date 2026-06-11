@@ -65,6 +65,6 @@ struct NotesView: View {
 
 #Preview {
     NotesView(
-        viewModel: NotesViewModel(coordinator: NotesCoordinator(navigationController: UINavigationController()))
+        viewModel: NotesViewModel(coordinator: NotesCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
     )
 }

@@ -112,6 +112,6 @@ struct HomeView: View {
 
 #Preview {
     HomeView(
-        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(repository: HomeRespository(realm: RealmStorage(), local: LocalStorage())))
+        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
     )
 }
