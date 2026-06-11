@@ -73,11 +73,11 @@ class NoteRealModelInfoModel: Object {
         return availableColors.removeFirst()
     }
     
-    private var formattedDate: String {
+    var formattedDate: String {
         self.date.formatted(.dateTime.month(.abbreviated).day().year())
     }
     
-    private var formattedTime: String {
+    var formattedTime: String {
         self.date.formatted(date: .omitted, time: .shortened)
     }
 }
@@ -92,5 +92,26 @@ final class TaskModel: EmbeddedObject {
         self.init()
         self.title = title
         self.isDone = isDone
+    }
+}
+
+
+// MARK: - For dummy test only.
+extension NoteRealModelInfoModel {
+    static var mock: NoteRealModelInfoModel {
+        let note = NoteRealModelInfoModel()
+        note.name = "Sprint Planning Meeting"
+        note.summary = "Discussed sprint goals and backlog priorities."
+        note.transcript = "Detailed meeting transcript goes here."
+        note.isFav = true
+
+        note.tasks.append(
+            objectsIn: [
+                TaskModel(title: "Finalize sprint backlog", isDone: true),
+                TaskModel(title: "Assign stories", isDone: false)
+            ]
+        )
+
+        return note
     }
 }

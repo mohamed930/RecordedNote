@@ -39,4 +39,12 @@ final class NotesRespotery: NotesRespoteryProtocol {
         }
     }
     
+    func convertNoteToNoteRealModel(id: String) -> NoteRealModelInfoModel? {
+        let note: NoteRealModelInfoModel? = realm.object {
+            $0.id == id
+        }
+        
+        return note
+    }
+    
 }

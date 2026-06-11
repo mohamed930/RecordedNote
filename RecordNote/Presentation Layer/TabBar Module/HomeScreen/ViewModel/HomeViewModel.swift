@@ -37,7 +37,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     func seeAllButtonAction() {
-        
+        coordinator?.moveToNotesScreen()
     }
     
     func fetchNotes() {
@@ -54,5 +54,11 @@ final class HomeViewModel: ObservableObject {
     
     func fetchUerName() {
         userName = useCases.fetchUserName()
+    }
+    
+    func moveToNoteDetailsScreen(id: String) {
+        guard let model: NoteRealModelInfoModel = useCases.convertNoteDTOToFullObject(id: id) else { return }
+        
+        coordinator?.moveToNoteDetailsScreen(note: model)
     }
 }

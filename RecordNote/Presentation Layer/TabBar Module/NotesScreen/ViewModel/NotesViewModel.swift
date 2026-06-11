@@ -35,4 +35,9 @@ final class NotesViewModel: ObservableObject {
     func addButtonAction() {
         coordinator?.moveToNewNoteScreen()
     }
+    
+    func moveToNoteDetailsScreen(id: String) {
+        guard let model = useCases.convertNoteDTOToFullObject(id: id) else { return }
+        coordinator?.moveToNoteDetailsScreen(note: model)
+    }
 }

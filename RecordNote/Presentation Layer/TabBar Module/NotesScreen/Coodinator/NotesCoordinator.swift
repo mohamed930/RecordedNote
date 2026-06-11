@@ -30,4 +30,10 @@ final class NotesCoordinator: BaseCoordinator {
         add(coordinator: coordinator)
         coordinator.start()
     }
+    
+    func moveToNoteDetailsScreen(note: NoteRealModelInfoModel) {
+        let coordinator = NoteDetailsCoordinator(navigationController: navigationController, note: note)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
 }

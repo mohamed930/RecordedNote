@@ -34,4 +34,8 @@ final class NotesUseCases {
     func fetchFiltersNotes(filter: NotesFilterValues) -> [MeetingNoteCardAttributes] {
         notesRespotery.filterNotes(filter: filter)
     }
+    
+    func convertNoteDTOToFullObject(id: String) -> NoteRealModelInfoModel? {
+        notesRespotery.convertNoteToNoteRealModel(id: id)
+    }
 }

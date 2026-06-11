@@ -24,4 +24,14 @@ final class HomeCoordinator: BaseCoordinator {
         viewController.tabBarItem =  UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.setViewControllers([viewController], animated: true)
     }
+    
+    func moveToNoteDetailsScreen(note: NoteRealModelInfoModel) {
+        let coordinator = NoteDetailsCoordinator(navigationController: navigationController, note: note)
+        add(coordinator: coordinator)
+        coordinator.start()
+    }
+    
+    func moveToNotesScreen() {
+        navigationController.tabBarController?.selectedIndex = 3
+    }
 }

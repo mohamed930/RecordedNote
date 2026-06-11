@@ -40,14 +40,31 @@ struct NotesView: View {
                     .padding(.horizontal,16)
                     .padding(.bottom,16)
                 
-                ScrollView {
-                    LazyVStack(spacing: 12) {
-                        ForEach(viewModel.notes,id: \.id) { note in
-                            MeetingNoteCardComponets(attributes: note)
-                        }
+                if viewModel.notes.isEmpty {
+                    VStack {
+                        Spacer()
+                        
+                        Text("No Notes Found")
+                            .setFont(fontName: .mainFontMeduim, size: 18)
+                            .padding(.bottom,150)
+                        
+                        Spacer()
                     }
-                    .padding(.horizontal, 12)
                 }
+                else {
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(viewModel.notes,id: \.id) { note in
+                                MeetingNoteCardComponets(attributes: note, onTapped:  {
+                                    viewModel.moveToNoteDetailsScreen(id: note.id)
+                                })
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
+                }
+                
+                
                 
                 Spacer()
             }

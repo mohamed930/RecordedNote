@@ -96,6 +96,9 @@ struct HomeView: View {
                     LazyVStack(spacing: 12) {
                         ForEach(viewModel.notes) { note in
                             MeetingNoteCard(note: note)
+                                .onTapGesture {
+                                    viewModel.moveToNoteDetailsScreen(id: note.id)
+                                }
                         }
                     }
                 }
