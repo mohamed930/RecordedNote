@@ -95,9 +95,13 @@ struct NoteDetailsView: View {
                     .padding(.horizontal,16)
                 }
                 
-                
-                
                 Spacer()
+                
+                AudioPlayerView(viewModel: AudioPlayerViewModel(
+                    useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()),
+                        audioPlayer: AudioPlayerService()),
+                        model: viewModel.noteModel))
+                .padding(.horizontal,-16)
             }
             .padding(.horizontal,16)
         }

@@ -19,7 +19,7 @@ final class HomeCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        let viewModel = HomeViewModel(coordinator: self, useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
+        let viewModel = HomeViewModel(coordinator: self, useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()), audioPlayer: AudioPlayerService()))
         let viewController = HomeViewController(viewModel: viewModel)
         viewController.tabBarItem =  UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.setViewControllers([viewController], animated: true)

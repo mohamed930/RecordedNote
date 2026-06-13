@@ -82,6 +82,6 @@ struct NotesView: View {
 
 #Preview {
     NotesView(
-        viewModel: NotesViewModel(coordinator: NotesCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
+        viewModel: NotesViewModel(coordinator: NotesCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()), audioPlayer: AudioPlayerService()))
     )
 }

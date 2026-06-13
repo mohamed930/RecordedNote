@@ -19,7 +19,7 @@ final class NoteDetailsCoordinator: BaseCoordinator {
     override func start() {
         let viewModel      = NoteDetailsViewModel(coordinator: self, noteModel: note)
         let viewController = NoteDetailsViewController(viewModel: viewModel)
-        viewController.hidesBottomBarWhenPushed = true
+//        viewController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewController, animated: true)
     }
     

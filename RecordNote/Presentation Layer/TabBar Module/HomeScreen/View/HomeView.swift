@@ -115,6 +115,6 @@ struct HomeView: View {
 
 #Preview {
     HomeView(
-        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRespotery: NotesRespotery(realm: RealmStorage())))
+        viewModel: HomeViewModel(coordinator: HomeCoordinator(navigationController: UINavigationController()), useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()), audioPlayer: AudioPlayerService()))
     )
 }
