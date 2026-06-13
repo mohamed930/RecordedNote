@@ -17,7 +17,7 @@ final class NoteDetailsCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = NoteDetailsViewModel(coordinator: self, noteModel: note)
+        let viewModel      = NoteDetailsViewModel(coordinator: self, noteModel: note, useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())))
         let viewController = NoteDetailsViewController(viewModel: viewModel)
 //        viewController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewController, animated: true)

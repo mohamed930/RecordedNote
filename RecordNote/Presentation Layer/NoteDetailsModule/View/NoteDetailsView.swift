@@ -79,7 +79,7 @@ struct NoteDetailsView: View {
                                      lineSpacing: 10)
                 case .tasks:
                     VStack(spacing: 0) {
-                        ForEach(Array(viewModel.noteModel.tasks.enumerated()), id: \.offset) { index, task in
+                        ForEach(Array(viewModel.tasksList.enumerated()), id: \.offset) { index, task in
                             TaskRow(
                                 title: task.title,
                                 isDone: task.isDone
@@ -110,6 +110,6 @@ struct NoteDetailsView: View {
 
 #Preview {
     NoteDetailsView(
-        viewModel: NoteDetailsViewModel(coordinator: NoteDetailsCoordinator(navigationController: UINavigationController(), note: .mock), noteModel: .mock)
+        viewModel: NoteDetailsViewModel(coordinator: NoteDetailsCoordinator(navigationController: UINavigationController(), note: .mock), noteModel: .mock, useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())))
     )
 }

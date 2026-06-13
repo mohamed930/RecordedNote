@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 final class NotesRespotery: NotesRespoteryProtocol {
     
@@ -45,6 +46,14 @@ final class NotesRespotery: NotesRespoteryProtocol {
         }
         
         return note
+    }
+    
+    func updateTask(note: NoteRealModelInfoModel,index: Int,isDone: Bool) -> Bool {
+        var updateNote = note
+//        updateNote.tasks[index].isDone = isDone
+        return realm.update {
+            updateNote.tasks[index].isDone = isDone
+        }
     }
     
 }
