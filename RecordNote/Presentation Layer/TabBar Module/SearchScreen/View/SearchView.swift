@@ -36,25 +36,26 @@ struct SearchView: View {
             )
             .padding(.bottom,16)
             
-            Text("Recent Searches")
-                .setFont(fontName: .mainFontSemiBold, size: 14)
-                .foregroundStyle(Color._99_A_1_AF)
-                .padding(.bottom,10)
-            
-            LazyVStack(spacing: 6) {
-                ForEach(viewModel.latestSearchResult,id:\.id) { note in
-                    SearchHistoryRow(title: note.name) {
-                        viewModel.suggestionTappedAction(title: note.name)
+            if !viewModel.latestSearchResult.isEmpty {
+                Text("Recent Searches")
+                    .setFont(fontName: .mainFontSemiBold, size: 14)
+                    .foregroundStyle(Color._99_A_1_AF)
+                    .padding(.bottom,10)
+                
+                LazyVStack(spacing: 6) {
+                    ForEach(viewModel.latestSearchResult,id:\.id) { note in
+                        SearchHistoryRow(title: note.name) {
+                            viewModel.suggestionTappedAction(title: note.name)
+                        }
                     }
                 }
+                .padding(.bottom,20)
             }
-            .padding(.bottom,20)
             
             ScrollView {
                 SearchFiltersSection(
                     selectedDate: $viewModel.date,
                     selectedCategory: $viewModel.category,
-                    hasTasks: $viewModel.hasTasks,
                     onDateTap: {
                         
                     },
@@ -65,6 +66,13 @@ struct SearchView: View {
                         
                     }
                 )
+                .padding(.bottom,16)
+                
+                LazyVStack(spacing: 16) {
+                    ForEach(viewModel.results) { note in
+                        MeetingNoteCard(note: note)
+                    }
+                }
             }
             
             Spacer()

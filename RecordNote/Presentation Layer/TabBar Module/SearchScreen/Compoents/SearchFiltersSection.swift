@@ -12,13 +12,12 @@ struct SearchFiltersSection: View {
 
     @Binding var selectedDate: String
     @Binding var selectedCategory: String
-    @Binding var hasTasks: Bool
 
     var onDateTap: (() -> Void)?
     var onCategoryTap: (() -> Void)?
     var onApply: (() -> Void)?
 
-    @State private var isExpanded = true
+    @State private var isExpanded = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -97,18 +96,6 @@ private extension SearchFiltersSection {
             Divider()
                 .padding(.bottom,-10)
 
-            HStack {
-                Text("Has Tasks")
-                    .setFont(fontName: .mainFontMeduim, size: 16)
-
-                Spacer()
-
-                Toggle("", isOn: $hasTasks)
-                    .labelsHidden()
-            }
-            .padding(.vertical, 24)
-            .padding(.bottom,-10)
-
             Button {
                 onApply?()
             } label: {
@@ -168,15 +155,13 @@ private extension SearchFiltersSection {
     }
 }
 
-#Preview {
-    @State var selectedDate = "All Time"
-    @State var selectedCategory = "All"
-    @State var hasTasks = false
-
-    SearchFiltersSection(
-        selectedDate: $selectedDate,
-        selectedCategory: $selectedCategory,
-        hasTasks: $hasTasks
-    )
-    .padding()
-}
+//#Preview {
+//    @State var selectedDate = "All Time"
+//    @State var selectedCategory = "All"
+//
+//    SearchFiltersSection(
+//        selectedDate: $selectedDate,
+//        selectedCategory: $selectedCategory
+//    )
+//    .padding()
+//}

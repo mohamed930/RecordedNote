@@ -16,6 +16,7 @@ final class SearchViewModel: ObservableObject {
     @Published var date = "All Time"
     @Published var category = "All"
     @Published var hasTasks = false
+    @Published var results: [MeetingNote] = .data
     
     private weak var coordinator: SearchCoordinator?
 
