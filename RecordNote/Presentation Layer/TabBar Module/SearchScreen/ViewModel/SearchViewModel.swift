@@ -9,9 +9,26 @@ import Foundation
 import Combine
 
 final class SearchViewModel: ObservableObject {
+    
+    // MARK: - Publishers.
+    @Published var searchText: String = ""
+    @Published var latestSearchResult: [NoteRealModelInfoModel] = [.mock]
+    @Published var date = "All Time"
+    @Published var category = "All"
+    @Published var hasTasks = false
+    
     private weak var coordinator: SearchCoordinator?
 
     init(coordinator: SearchCoordinator) {
         self.coordinator = coordinator
+    }
+    
+    // MARK: - Actions.
+    func search() {
+        
+    }
+    
+    func suggestionTappedAction(title: String) {
+        
     }
 }

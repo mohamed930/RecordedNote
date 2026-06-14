@@ -27,4 +27,3 @@ final class SearchViewController: UIViewController {
         addHosting(SearchView(viewModel: viewModel))
     }
 }
-
