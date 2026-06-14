@@ -43,9 +43,12 @@ struct SearchView: View {
                     .padding(.bottom,10)
                 
                 LazyVStack(spacing: 6) {
-                    ForEach(viewModel.latestSearchResult,id:\.id) { note in
-                        SearchHistoryRow(title: note.name) {
-                            viewModel.suggestionTappedAction(title: note.name)
+                    ForEach(
+                        Array(viewModel.latestSearchResult.enumerated()),
+                        id: \.offset
+                    ) { _, note in
+                        SearchHistoryRow(title: note) {
+                            viewModel.suggestionTappedAction(title: note)
                         }
                     }
                 }
@@ -79,11 +82,14 @@ struct SearchView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal,16)
+        .onAppear {
+            viewModel.latestSearchResult = viewModel.useCases.fetchSuggestion()
+        }
     }
 }
 
 #Preview {
     SearchView(
-        viewModel: SearchViewModel(coordinator: SearchCoordinator(navigationController: UINavigationController()))
+        viewModel: SearchViewModel(coordinator: SearchCoordinator(navigationController: UINavigationController()), useCases: SearchUseCases(respotery: SearchResportry(realm: RealmStorage())))
     )
 }

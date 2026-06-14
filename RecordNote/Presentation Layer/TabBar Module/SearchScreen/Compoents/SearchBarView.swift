@@ -7,8 +7,11 @@
 
 
 import SwiftUI
+import IQKeyboardManagerSwift
 
 struct SearchTextField: View {
+
+    @Environment(\.dismiss) private var dismiss
 
     @Binding var text: String
 
@@ -23,8 +26,30 @@ struct SearchTextField: View {
     var body: some View {
         HStack(spacing: 12) {
 
+            searchField
+
+            if !text.isEmpty {
+                Button("Cancel") {
+                    cancel()
+                }
+                .setFont(fontName: .mainFontMeduim, size: 16)
+                .foregroundStyle(.A_78_BFA)
+            }
+            
+           
+        }
+    }
+}
+
+// MARK: - Search Field
+
+private extension SearchTextField {
+
+    var searchField: some View {
+        HStack(spacing: 12) {
+
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
+                .foregroundStyle(.gray)
 
             TextField(placeholder, text: $text)
                 .submitLabel(.search)
@@ -40,14 +65,15 @@ struct SearchTextField: View {
                     clear()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
+                .buttonStyle(.plain)
             }
         }
         .padding(.horizontal, 16)
-        .frame(height: 56)
+        .frame(height: 43)
         .background(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 12)
                 .fill(Color(.systemGray6))
         )
     }
@@ -73,18 +99,20 @@ private extension SearchTextField {
     }
 
     func performSearch() {
-        // User pressed Search on keyboard
-        // Cancel pending debounce to avoid duplicate requests
         debounceTask?.cancel()
-
         onSearch?()
     }
 
     func clear() {
         debounceTask?.cancel()
-
         text = ""
-
         onDebounce?()
+    }
+
+    func cancel() {
+        debounceTask?.cancel()
+        text = ""
+        dismiss()
+        IQKeyboardManager.shared.resignFirstResponder()
     }
 }

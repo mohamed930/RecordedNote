@@ -20,7 +20,7 @@ final class SearchCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = SearchViewModel(coordinator: self)
+        let viewModel      = SearchViewModel(coordinator: self, useCases: SearchUseCases(respotery: SearchResportry(realm: RealmStorage())))
         let viewController = SearchViewController(viewModel: viewModel)
         viewController.tabBarItem =  UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.setViewControllers([viewController], animated: true)
