@@ -25,4 +25,6 @@ protocol AudioPlayerProtocol: AnyObject {
     func seek(to seconds: Double)
 
     func stop()
+    
+    func audioURL(fileName: String) -> URL
 }

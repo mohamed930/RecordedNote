@@ -57,33 +57,55 @@ final class NotesUseCases {
 
     // MARK: - Audio
 
+//    func loadAudio(for note: NoteRealModelInfoModel) -> Bool {
+//
+//        guard let audioData = note.audio else {
+//            return false
+//        }
+//
+//        let fileURL = FileManager.default
+//            .temporaryDirectory
+//            .appendingPathComponent("\(note.id).mp3")
+//
+//        do {
+//            try audioData.write(to: fileURL)
+//
+//            let item = AudioItem(
+//                id: note.id,
+//                url: fileURL,
+//                title: note.name
+//            )
+//
+//            audioPlayer.load(item)
+//            
+//            return true
+//
+//        } catch {
+//            print("Failed to write audio data: \(error)")
+//            return false
+//        }
+//    }
+    
     func loadAudio(for note: NoteRealModelInfoModel) -> Bool {
 
-        guard let audioData = note.audio else {
+        guard let audio = note.audio, !audio.isEmpty else { return false }
+
+        let fileURL = audioPlayer.audioURL(fileName: audio)
+
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            print("Audio not found at: \(fileURL.path)")
             return false
         }
 
-        let fileURL = FileManager.default
-            .temporaryDirectory
-            .appendingPathComponent("\(note.id).mp3")
+        let item = AudioItem(
+            id: note.id,
+            url: fileURL,
+            title: note.name
+        )
 
-        do {
-            try audioData.write(to: fileURL)
+        audioPlayer.load(item)
 
-            let item = AudioItem(
-                id: note.id,
-                url: fileURL,
-                title: note.name
-            )
-
-            audioPlayer.load(item)
-            
-            return true
-
-        } catch {
-            print("Failed to write audio data: \(error)")
-            return false
-        }
+        return true
     }
 
     func playAudio() {

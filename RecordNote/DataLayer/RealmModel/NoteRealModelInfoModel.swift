@@ -29,7 +29,7 @@ class NoteRealModelInfoModel: Object {
     var isFav: Bool = false
 
     @Persisted
-    var audio: Data?
+    var audio: String?
 
     @Persisted
     var tasks = List<TaskModel>()

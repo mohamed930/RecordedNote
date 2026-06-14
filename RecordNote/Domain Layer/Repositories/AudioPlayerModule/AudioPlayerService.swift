@@ -203,4 +203,15 @@ extension AudioPlayerService {
 
         NotificationCenter.default.removeObserver(self)
     }
+    
+    func audioURL(fileName: String) -> URL {
+        let documents = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first!
+
+        return documents
+            .appendingPathComponent("Audios")
+            .appendingPathComponent(fileName)
+    }
 }
