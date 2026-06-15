@@ -32,6 +32,13 @@ final class SearchViewModel: ObservableObject {
     }
     
     func suggestionTappedAction(title: String) {
+        searchText = title
         
+        results = useCases.fetchResults(str: searchText)
+    }
+    
+    func moveToNoteDetailsScreen(note: MeetingNote) {
+        guard let note = useCases.convertToNoteRealModel(id: note.id) else { return }
+        coordinator?.moveToNoteDetailsScreen(note: note)
     }
 }

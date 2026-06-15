@@ -16,7 +16,6 @@ final class SearchCoordinator: BaseCoordinator {
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        
     }
 
     override func start() {
@@ -24,5 +23,11 @@ final class SearchCoordinator: BaseCoordinator {
         let viewController = SearchViewController(viewModel: viewModel)
         viewController.tabBarItem =  UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.setViewControllers([viewController], animated: true)
+    }
+    
+    func moveToNoteDetailsScreen(note: NoteRealModelInfoModel) {
+        let coordiantor = NoteDetailsCoordinator(navigationController: navigationController, note: note)
+        add(coordinator: coordiantor)
+        coordiantor.start()
     }
 }

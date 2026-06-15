@@ -74,6 +74,9 @@ struct SearchView: View {
                 LazyVStack(spacing: 16) {
                     ForEach(viewModel.results) { note in
                         MeetingNoteCard(note: note)
+                            .onTapGesture {
+                                viewModel.moveToNoteDetailsScreen(note: note)
+                            }
                     }
                 }
             }

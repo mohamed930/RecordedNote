@@ -11,4 +11,5 @@ protocol SearchResportryProtocol {
     func saveSuggestion(str: String) -> Bool
     func fetchSuggestion() -> [String]
     func fetchResults(str: String,date: Date?,category: NotesFilterValues?) -> [MeetingNote]
+    func fetchNote(id: String) -> NoteRealModelInfoModel?
 }

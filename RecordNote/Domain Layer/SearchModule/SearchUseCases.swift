@@ -21,4 +21,8 @@ class SearchUseCases {
     func fetchResults(str: String,date: Date? = nil,category: NotesFilterValues? = nil) -> [MeetingNote] {
         respotery.fetchResults(str: str, date: date, category: category)
     }
+    
+    func convertToNoteRealModel(id: String) -> NoteRealModelInfoModel? {
+        respotery.fetchNote(id: id)
+    }
 }

@@ -26,9 +26,16 @@ final class SearchResportry: SearchResportryProtocol {
     
     func fetchSuggestion() -> [String] {
         let suggestion: [SuggestionModel] = realm.objects()
-        let finalSuggestion = Array(Set(suggestion))
-        
-        return finalSuggestion.prefix(3).map { $0.convertToString() }
+
+        var seen = Set<String>()
+
+        let finalSuggestion = suggestion.filter {
+            seen.insert($0.suggest.lowercased()).inserted
+        }
+
+        return finalSuggestion
+            .prefix(3)
+            .map { $0.convertToString() }
     }
     
     func fetchResults(str: String, date: Date?, category: NotesFilterValues?) -> [MeetingNote] {
@@ -49,7 +56,7 @@ final class SearchResportry: SearchResportryProtocol {
                 to: startOfDay
             )!
 
-            filtered = notes.filter({$0.date >= startOfDay && $0.date <= endOfDay })
+            filtered = notes.filter({ $0.date >= startOfDay && $0.date <= endOfDay })
             
             if let category = category {
                 filtered = notes.filter {($0.name.lowercased().contains(category.rawValue.lowercased().lowercased()) || $0.name.lowercased().contains(category.rawValue.lowercased()))}
@@ -85,5 +92,13 @@ final class SearchResportry: SearchResportryProtocol {
         }
         
         return notes.map { $0.convertToDTO() }
+    }
+    
+    func fetchNote(id: String) -> NoteRealModelInfoModel? {
+        let note: NoteRealModelInfoModel? = realm.object({
+            $0.id == id
+        })
+        
+        return note
     }
 }
