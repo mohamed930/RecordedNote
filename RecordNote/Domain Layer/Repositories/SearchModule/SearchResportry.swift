@@ -16,15 +16,30 @@ final class SearchResportry: SearchResportryProtocol {
     }
     
     func saveSuggestion(str: String) -> Bool {
-        
-        let model: SuggestionModel = SuggestionModel()
-        model.id = UUID().uuidString
-        model.suggest = str
-        
-        return realm.write(model)
+
+        let trimmed = str.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmed.isEmpty else {
+            return false
+        }
+
+        let suggestions: [SuggestionModel] = realm.objects {
+            $0.suggest.lowercased() == trimmed.lowercased()
+        }
+
+        guard suggestions.isEmpty else {
+            return true
+        }
+
+        let suggestion = SuggestionModel()
+        suggestion.suggest = trimmed
+
+        return realm.write(suggestion)
     }
     
-    func fetchSuggestion() -> [String] {
+    func fetchSuggestion() -> [SuggestionModel] {
         let suggestion: [SuggestionModel] = realm.objects()
 
         var seen = Set<String>()
@@ -33,9 +48,12 @@ final class SearchResportry: SearchResportryProtocol {
             seen.insert($0.suggest.lowercased()).inserted
         }
 
-        return finalSuggestion
-            .prefix(3)
-            .map { $0.convertToString() }
+        return finalSuggestion.prefix(3).map { suggestion in
+            let detachedSuggestion = SuggestionModel()
+            detachedSuggestion.id = suggestion.id
+            detachedSuggestion.suggest = suggestion.suggest
+            return detachedSuggestion
+        }
     }
     
     func fetchResults(str: String, date: Date?, category: NotesFilterValues?) -> [MeetingNote] {
@@ -100,5 +118,14 @@ final class SearchResportry: SearchResportryProtocol {
         })
         
         return note
+    }
+    
+    func deleteSuggestion(id: String) -> Bool {
+        
+        guard let suggestion: SuggestionModel = realm.object(id) else {
+            return false
+        }
+
+        return realm.delete(suggestion)
     }
 }

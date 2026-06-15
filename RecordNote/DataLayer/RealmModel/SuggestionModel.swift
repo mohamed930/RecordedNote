@@ -15,8 +15,4 @@ class SuggestionModel: Object {
     
     @Persisted
     var suggest: String = ""
-    
-    func convertToString() -> String {
-        return suggest
-    }
 }

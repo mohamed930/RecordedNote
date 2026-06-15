@@ -7,12 +7,13 @@
 
 import Foundation
 import Combine
+import RealmSwift
 
 final class SearchViewModel: ObservableObject {
     
     // MARK: - Publishers.
     @Published var searchText: String = ""
-    @Published var latestSearchResult: [String] = []
+    @Published var latestSearchResult: [SuggestionModel] = []
     @Published var date = "All Time"
     @Published var category = "All"
     @Published var hasTasks = false
@@ -40,5 +41,13 @@ final class SearchViewModel: ObservableObject {
     func moveToNoteDetailsScreen(note: MeetingNote) {
         guard let note = useCases.convertToNoteRealModel(id: note.id) else { return }
         coordinator?.moveToNoteDetailsScreen(note: note)
+    }
+    
+    func deleteSuggestion(_ note: SuggestionModel) {
+        let response = useCases.deleteSuggestion(id: note.id)
+
+        if response {
+            latestSearchResult = useCases.fetchSuggestion()
+        }
     }
 }

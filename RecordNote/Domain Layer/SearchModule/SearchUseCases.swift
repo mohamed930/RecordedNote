@@ -14,7 +14,7 @@ class SearchUseCases {
         self.respotery = respotery
     }
     
-    func fetchSuggestion() -> [String] {
+    func fetchSuggestion() -> [SuggestionModel] {
         respotery.fetchSuggestion()
     }
     
@@ -24,5 +24,9 @@ class SearchUseCases {
     
     func convertToNoteRealModel(id: String) -> NoteRealModelInfoModel? {
         respotery.fetchNote(id: id)
+    }
+    
+    func deleteSuggestion(id: String) -> Bool {
+        respotery.deleteSuggestion(id: id)
     }
 }

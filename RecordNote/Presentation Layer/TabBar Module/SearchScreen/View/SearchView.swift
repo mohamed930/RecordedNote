@@ -40,19 +40,36 @@ struct SearchView: View {
                 Text("Recent Searches")
                     .setFont(fontName: .mainFontSemiBold, size: 14)
                     .foregroundStyle(Color._99_A_1_AF)
-                    .padding(.bottom,10)
+                    .padding(.bottom, 10)
                 
-                LazyVStack(spacing: 6) {
-                    ForEach(
-                        Array(viewModel.latestSearchResult.enumerated()),
-                        id: \.offset
-                    ) { _, note in
-                        SearchHistoryRow(title: note) {
-                            viewModel.suggestionTappedAction(title: note)
+                List {
+                    ForEach(viewModel.latestSearchResult, id: \.id) { note in
+                        SearchHistoryRow(title: note.suggest) {
+                            viewModel.suggestionTappedAction(title: note.suggest)
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .padding(.vertical, 4)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .cancel) {
+                                viewModel.deleteSuggestion(note)
+                            } label: {
+                                Image(systemName: "trash")
+                            }
+                            .tint(.red)
                         }
                     }
                 }
-                .padding(.bottom,20)
+                .listStyle(.plain)
+                .frame(maxHeight: CGFloat(viewModel.latestSearchResult.count) * 58)
+                .background(Color.clear)
+                .environment(\.defaultMinListRowHeight, 0)
+                .disableScrollIfAvailable()
+                .onAppear {
+                    UITableView.appearance().separatorStyle = .none
+                }
+                .padding(.bottom,16)
             }
             
             ScrollView {
@@ -87,6 +104,8 @@ struct SearchView: View {
         .padding(.horizontal,16)
         .onAppear {
             viewModel.latestSearchResult = viewModel.useCases.fetchSuggestion()
+            UITableView.appearance().separatorStyle = .none
+            UITableView.appearance().backgroundColor = .clear
         }
     }
 }
@@ -95,4 +114,16 @@ struct SearchView: View {
     SearchView(
         viewModel: SearchViewModel(coordinator: SearchCoordinator(navigationController: UINavigationController()), useCases: SearchUseCases(respotery: SearchResportry(realm: RealmStorage())))
     )
+}
+
+extension View {
+    
+    @ViewBuilder
+    func disableScrollIfAvailable() -> some View {
+        if #available(iOS 16.0, *) {
+            self.scrollDisabled(true)
+        } else {
+            self
+        }
+    }
 }
