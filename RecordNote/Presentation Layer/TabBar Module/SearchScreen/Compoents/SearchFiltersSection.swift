@@ -8,13 +8,26 @@
 
 import SwiftUI
 
+enum FilterType {
+    case multiDate
+    case menu(values: [String])
+}
+
+struct FilterItem: Identifiable {
+    let id = UUID()
+    let title: String
+    var value: String
+    let type: FilterType
+}
+
 struct SearchFiltersSection: View {
 
     @Binding var selectedDate: String
     @Binding var selectedCategory: String
+    @State private var isDateExpanded: Bool = false
+    @Binding var selectedDates: Set<DateComponents>
 
-    var onDateTap: (() -> Void)?
-    var onCategoryTap: (() -> Void)?
+    var onCategoryTap: ((String) -> Void)?
     var onApply: (() -> Void)?
 
     @State private var isExpanded = false
@@ -79,9 +92,26 @@ private extension SearchFiltersSection {
             filterRow(
                 title: "Date",
                 value: selectedDate,
-                action: onDateTap
+                type: .multiDate,
+                action: { _ in
+                    isDateExpanded.toggle()
+                }
             )
-            .padding(.bottom,-10)
+            .padding(.bottom,10)
+            
+            if isDateExpanded {
+                if #available(iOS 16.0, *) {
+                    MultiDatePicker(
+                        "Dates",
+                        selection: $selectedDates
+                    )
+//                    .padding(.top, 8)
+                    .frame(height: 310)
+                    
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
 
             Divider()
                 .padding(.bottom,-10)
@@ -89,13 +119,15 @@ private extension SearchFiltersSection {
             filterRow(
                 title: "Category",
                 value: selectedCategory,
-                action: onCategoryTap
+                type: .menu(
+                    values: NotesFilterValues.allCases.map({ $0.rawValue })
+                ),
+                action: { str in
+                    onCategoryTap?(str)
+                }
             )
-            .padding(.bottom,-10)
-
-            Divider()
-                .padding(.bottom,-10)
-
+            .padding(.bottom,-6)
+            
             Button {
                 onApply?()
             } label: {
@@ -123,45 +155,82 @@ private extension SearchFiltersSection {
         .padding(.top, 12)
     }
 
+    @ViewBuilder
     func filterRow(
         title: String,
         value: String,
-        action: (() -> Void)?
+        type: FilterType,
+        action: ((String) -> Void)?
     ) -> some View {
-        Button {
-            action?()
-        } label: {
-            HStack {
 
-                Text(title)
-                    .setFont(fontName: .mainFontMeduim, size: 16)
-                    .foregroundStyle(.primary)
+        switch type {
 
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Text(value)
-                        .setFont(fontName: .mainFontSemiBold, size: 16)
-                        .foregroundStyle(.A_78_BFA)
-
-                    Image(systemName: "chevron.down")
-                        .setFont(fontName: .mainFontSemiBold, size: 14)
-                        .foregroundStyle(.A_78_BFA)
-                }
+        case .multiDate:
+            Button {
+                action?("")
+            } label: {
+                rowContent(
+                    title: title,
+                    value: value
+                )
             }
-            .padding(.vertical, 24)
+            .buttonStyle(.plain)
+
+        case .menu(let values):
+            Menu {
+                ForEach(values, id: \.self) { item in
+                    Button(item) {
+                        action?(item)
+                    }
+                }
+            } label: {
+                rowContent(
+                    title: title,
+                    value: value
+                )
+            }
         }
-        .buttonStyle(.plain)
+    }
+    
+    func rowContent(
+        title: String,
+        value: String
+    ) -> some View {
+
+        HStack {
+
+            Text(title)
+                .setFont(
+                    fontName: .mainFontMeduim,
+                    size: 16
+                )
+
+            Spacer()
+
+            HStack(spacing: 8) {
+
+                Text(value)
+                    .setFont(
+                        fontName: .mainFontSemiBold,
+                        size: 16
+                    )
+                    .foregroundStyle(.A_78_BFA)
+
+                Image(systemName: "chevron.down")
+                    .foregroundStyle(.A_78_BFA)
+            }
+        }
+        .padding(.vertical, 24)
     }
 }
 
-//#Preview {
-//    @State var selectedDate = "All Time"
-//    @State var selectedCategory = "All"
-//
-//    SearchFiltersSection(
-//        selectedDate: $selectedDate,
-//        selectedCategory: $selectedCategory
-//    )
-//    .padding()
-//}
+#Preview {
+    @State var selectedDate = "All Time"
+    @State var selectedCategory = "All"
+
+    SearchFiltersSection(
+        selectedDate: $selectedDate,
+        selectedCategory: $selectedCategory, selectedDates: .constant([])
+    )
+    .padding()
+}

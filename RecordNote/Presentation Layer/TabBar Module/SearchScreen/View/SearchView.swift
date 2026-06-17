@@ -76,14 +76,13 @@ struct SearchView: View {
                 SearchFiltersSection(
                     selectedDate: $viewModel.date,
                     selectedCategory: $viewModel.category,
-                    onDateTap: {
-                        
-                    },
-                    onCategoryTap: {
-                        
+                    selectedDates: $viewModel.selectedDates,
+                    onCategoryTap: { str in
+                        viewModel.filterCategpry = str
+                        viewModel.category = str
                     },
                     onApply: {
-                        
+                        viewModel.searchWithFilter()
                     }
                 )
                 .padding(.bottom,16)

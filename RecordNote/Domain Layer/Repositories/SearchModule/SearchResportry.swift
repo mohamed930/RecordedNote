@@ -56,60 +56,72 @@ final class SearchResportry: SearchResportryProtocol {
         }
     }
     
-    func fetchResults(str: String, date: Date?, category: NotesFilterValues?) -> [MeetingNote] {
-        
-        let notes: [NoteRealModelInfoModel] = realm.objects { note in
-            note.name.lowercased().contains(str.lowercased())
-        }
-        
-        if let date = date {
-            var filtered = notes
-            
-            let calendar = Calendar.current
+    func fetchResults(str: String,date: [Date]?,category: String?) -> [MeetingNote] {
 
-            let startOfDay = calendar.startOfDay(for: date)
-            let endOfDay = calendar.date(
-                byAdding: .day,
-                value: 1,
-                to: startOfDay
-            )!
+        let calendar = Calendar.current
 
-            filtered = notes.filter({ $0.date >= startOfDay && $0.date <= endOfDay })
-            
-            if let category = category {
-                filtered = notes.filter {($0.name.lowercased().contains(category.rawValue.lowercased().lowercased()) || $0.name.lowercased().contains(category.rawValue.lowercased()))}
-                
-                if !filtered.isEmpty {
-                    _ = saveSuggestion(str: str)
+        var filtered: [NoteRealModelInfoModel] = realm.objects {
+            $0.name.lowercased().contains(str.lowercased())
+        }
+
+        // Date filter
+        if let dates = date, !dates.isEmpty {
+
+            let sortedDates = dates.sorted()
+
+            if sortedDates.count == 1 {
+
+                let start = calendar.startOfDay(
+                    for: sortedDates[0]
+                )
+
+                let end = calendar.date(
+                    byAdding: .day,
+                    value: 1,
+                    to: start
+                )!
+
+                filtered = filtered.filter {
+                    $0.date >= start &&
+                    $0.date < end
                 }
-                
-                return filtered.map { $0.convertToDTO() }
-            }
-            else {
-                
-                if !filtered.isEmpty {
-                    _ = saveSuggestion(str: str)
+
+            } else {
+
+                let start = calendar.startOfDay(
+                    for: sortedDates.first!
+                )
+
+                let end = calendar.date(
+                    byAdding: .day,
+                    value: 1,
+                    to: sortedDates.last!
+                )!
+
+                filtered = filtered.filter {
+                    $0.date >= start &&
+                    $0.date < end
                 }
-                
-                return filtered.map { $0.convertToDTO() }
             }
         }
-        
-        if let category = category {
-            let filtered = notes.filter {($0.name.lowercased().contains(category.rawValue.lowercased().lowercased()) || $0.name.lowercased().contains(category.rawValue.lowercased()))}
-            
-            if !filtered.isEmpty {
-                _ = saveSuggestion(str: str)
+
+        // Category filter
+        if let category,
+           !category.isEmpty {
+
+            filtered = filtered.filter {
+                $0.name.lowercased()
+                    .contains(category.lowercased())
             }
-            
-            return filtered.map { $0.convertToDTO() }
         }
-        
-        if !notes.isEmpty {
+
+        if !filtered.isEmpty {
             _ = saveSuggestion(str: str)
         }
-        
-        return notes.map { $0.convertToDTO() }
+
+        return filtered.map {
+            $0.convertToDTO()
+        }
     }
     
     func fetchNote(id: String) -> NoteRealModelInfoModel? {

@@ -18,7 +18,7 @@ class SearchUseCases {
         respotery.fetchSuggestion()
     }
     
-    func fetchResults(str: String,date: Date? = nil,category: NotesFilterValues? = nil) -> [MeetingNote] {
+    func fetchResults(str: String,date: [Date]? = nil,category: String? = nil) -> [MeetingNote] {
         respotery.fetchResults(str: str, date: date, category: category)
     }
     
