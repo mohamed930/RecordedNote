@@ -14,6 +14,7 @@ struct SettingsRow: View {
     
     var textColor: Color = .black
     var showsChevron: Bool = true
+    var isCenter: Bool = true
     
     var action: (() -> Void)? = nil
     
@@ -26,9 +27,9 @@ struct SettingsRow: View {
                 Image(icon)
                 
                 Text(title)
-                    .setFont(fontName: .mainFontMeduim, size: 15)
+                    .setFont(fontName: isCenter ? .mainFontMeduim : .mainFontSemiBold, size: 16)
                     .foregroundStyle(textColor)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity, alignment: isCenter ? .center : .leading)
                 
                 if showsChevron {
                     Image(systemName: "chevron.right")
@@ -43,5 +44,5 @@ struct SettingsRow: View {
 }
 
 #Preview {
-    SettingsRow( title: "Settings", icon: .settings )
+    SettingsRow( title: "Settings", icon: .settings, showsChevron: false ,isCenter: false)
 }

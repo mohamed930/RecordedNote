@@ -21,6 +21,7 @@ final class NoteDetailsViewModel: ObservableObject {
     @Published var noteModel: NoteRealModelInfoModel
     @Published var tasksList: [UITaskModel] = []
     @Published var selectedTab: NoteTab = .summary
+    @Published var isMenuOpen: Bool = false
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
@@ -42,7 +43,7 @@ final class NoteDetailsViewModel: ObservableObject {
     }
     
     func threeDotsButtonTapped() {
-        
+        isMenuOpen.toggle()
     }
     
     func selectedNoteRowAction(index: Int) {
@@ -51,5 +52,37 @@ final class NoteDetailsViewModel: ObservableObject {
         if flag {
             tasksList[index].isDone.toggle()
         }
+    }
+    
+    func menuActions(actionType: MenuComponets.MenuAction) {
+        switch actionType {
+        case .edit:
+            edit()
+        case .share:
+            share()
+        case .savePdf:
+            savePdf()
+        case .delete:
+            delete()
+        }
+    }
+}
+
+// MARK: - Menu action.
+extension NoteDetailsViewModel {
+    func edit() {
+        
+    }
+    
+    func share() {
+        
+    }
+    
+    func savePdf() {
+        
+    }
+    
+    func delete() {
+        
     }
 }

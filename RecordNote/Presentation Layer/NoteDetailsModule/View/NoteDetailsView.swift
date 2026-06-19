@@ -20,7 +20,7 @@ struct NoteDetailsView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             
             Color.white
                 .ignoresSafeArea()
@@ -47,7 +47,10 @@ struct NoteDetailsView: View {
                     Button {
                         viewModel.threeDotsButtonTapped()
                     } label: {
-                        Image(.threeDotsButton)
+                        Image(viewModel.isMenuOpen ? .menuOpened : .threeDotsButton)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32)
                     }
                 }
                 .padding(.bottom,20)
@@ -104,6 +107,18 @@ struct NoteDetailsView: View {
                 .padding(.horizontal,-16)
             }
             .padding(.horizontal,16)
+            
+            if viewModel.isMenuOpen {
+                MenuComponets { actions in
+                    viewModel.menuActions(actionType: actions)
+                }
+                .padding(.top,40)
+                .padding(.horizontal,18)
+                .animation(
+                    .spring(response: 0.25, dampingFraction: 1.0),
+                    value: viewModel.isMenuOpen
+                )
+            }
         }
     }
 }
