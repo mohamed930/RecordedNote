@@ -146,7 +146,7 @@ struct NoteDetailsView: View {
             ),
             noteModel: .mock,
             useCases: NoteDetailsUseCases(
-                respotery: NotesRespotery(realm: RealmStorage())
+                respotery: NotesRespotery(realm: RealmStorage()), service: PDFExportService()
             ),
             sheetManager: CustomSheetManager()
         ),

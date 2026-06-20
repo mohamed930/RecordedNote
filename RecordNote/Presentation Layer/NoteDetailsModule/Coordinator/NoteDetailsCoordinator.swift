@@ -21,7 +21,7 @@ final class NoteDetailsCoordinator: BaseCoordinator {
         let viewModel = NoteDetailsViewModel(
             coordinator: self,
             noteModel: note,
-            useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())),
+            useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage()), service: PDFExportService()),
             sheetManager: sheetManager
         )
         let viewController = NoteDetailsViewController(

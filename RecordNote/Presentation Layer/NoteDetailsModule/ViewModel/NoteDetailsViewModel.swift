@@ -23,6 +23,8 @@ final class NoteDetailsViewModel: ObservableObject {
     @Published var tasksList: [UITaskModel] = []
     @Published var selectedTab: NoteTab = .summary
     @Published var isMenuOpen: Bool = false
+    @Published var pdfUrl: URL?
+    private var selectedTabs: [PDFContentOption] = []
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
@@ -86,6 +88,7 @@ extension NoteDetailsViewModel {
         
     }
     
+    @MainActor
     func savePdf() {
         isMenuOpen = false
 
@@ -93,21 +96,36 @@ extension NoteDetailsViewModel {
             content: {
                 PDFOptionsSheet { [weak self] selectedTab in
                         guard let self else { return }
-                        print("selectedTab: \(selectedTab)")
+                        
+                        selectedTabs = Array(selectedTab)
                     }
                     buttonTapped: { [weak self] finishLoading in
                         guard let self else {
                             finishLoading()
                             return
                         }
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-                            guard self != nil else {
+                        
+                        Task { [weak self] in
+                            guard let self else {
                                 finishLoading()
                                 return
                             }
+                            
+                            do {
+                                pdfUrl = try await useCases.execute(
+                                    note: noteModel,
+                                    options: selectedTabs
+                                )
+                                
+                                print("F: \(pdfUrl)")
 
-                            finishLoading()
+                                finishLoading()
+//                                showShareSheet = true
+
+                            } catch {
+                                finishLoading()
+                                print(error.localizedDescription)
+                            }
                         }
                     }
 
