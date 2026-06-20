@@ -11,9 +11,14 @@ final class NoteDetailsViewController: UIViewController {
 
     // MARK:- Private
     private var viewModel: NoteDetailsViewModel
+    private let sheetManager: CustomSheetManager
 
-    init(viewModel: NoteDetailsViewModel) {
+    init(
+        viewModel: NoteDetailsViewModel,
+        sheetManager: CustomSheetManager
+    ) {
         self.viewModel = viewModel
+        self.sheetManager = sheetManager
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -24,7 +29,11 @@ final class NoteDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addHosting(NoteDetailsView(viewModel: viewModel))
+        addHosting(
+            NoteDetailsView(
+                viewModel: viewModel,
+                sheetManager: sheetManager
+            )
+        )
     }
 }
-

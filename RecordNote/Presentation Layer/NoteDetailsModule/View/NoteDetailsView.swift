@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealmSwift
+import FittedSheetsSwiftUI
 
 // MARK: - NoteDetailsView
 
@@ -14,9 +15,14 @@ struct NoteDetailsView: View {
 
     // MARK:- Private
     @ObservedObject private var viewModel: NoteDetailsViewModel
+    @ObservedObject private var sheetManager: CustomSheetManager
 
-    init(viewModel: NoteDetailsViewModel) {
-      self.viewModel = viewModel
+    init(
+        viewModel: NoteDetailsViewModel,
+        sheetManager: CustomSheetManager
+    ) {
+        self.viewModel = viewModel
+        self.sheetManager = sheetManager
     }
 
     var body: some View {
@@ -120,11 +126,30 @@ struct NoteDetailsView: View {
                 )
             }
         }
+        .fittedSheet(
+            isPresented: $sheetManager.isPresented,
+            configuration: sheetManager.configuration,
+            sheetView:  {
+                sheetManager.content
+            },
+            animated: false)
+        
     }
 }
 
 #Preview {
     NoteDetailsView(
-        viewModel: NoteDetailsViewModel(coordinator: NoteDetailsCoordinator(navigationController: UINavigationController(), note: .mock), noteModel: .mock, useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())))
+        viewModel: NoteDetailsViewModel(
+            coordinator: NoteDetailsCoordinator(
+                navigationController: UINavigationController(),
+                note: .mock
+            ),
+            noteModel: .mock,
+            useCases: NoteDetailsUseCases(
+                respotery: NotesRespotery(realm: RealmStorage())
+            ),
+            sheetManager: CustomSheetManager()
+        ),
+        sheetManager: CustomSheetManager()
     )
 }

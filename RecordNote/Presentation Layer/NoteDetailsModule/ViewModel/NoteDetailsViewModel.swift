@@ -5,9 +5,10 @@
 //  Created Mohamed Ali on 11/06/2026.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 import RealmSwift
+import FittedSheets
 
 struct UITaskModel {
     let title: String
@@ -25,11 +26,18 @@ final class NoteDetailsViewModel: ObservableObject {
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
+    private let sheetManager: CustomSheetManager
 
-    init(coordinator: NoteDetailsCoordinator,noteModel: NoteRealModelInfoModel,useCases: NoteDetailsUseCases) {
+    init(
+        coordinator: NoteDetailsCoordinator,
+        noteModel: NoteRealModelInfoModel,
+        useCases: NoteDetailsUseCases,
+        sheetManager: CustomSheetManager
+    ) {
         self.coordinator = coordinator
         self.noteModel = noteModel
         self.useCases = useCases
+        self.sheetManager = sheetManager
         
         tasksList = noteModel.tasks.map {
             return UITaskModel(title: $0.title, isDone: $0.isDone)
@@ -79,7 +87,33 @@ extension NoteDetailsViewModel {
     }
     
     func savePdf() {
-        
+        isMenuOpen = false
+
+        sheetManager.present(
+            content: {
+                PDFOptionsSheet { [weak self] selectedTab in
+                        guard let self else { return }
+                        print("selectedTab: \(selectedTab)")
+                    }
+                    buttonTapped: { [weak self] finishLoading in
+                        guard let self else {
+                            finishLoading()
+                            return
+                        }
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+                            guard self != nil else {
+                                finishLoading()
+                                return
+                            }
+
+                            finishLoading()
+                        }
+                    }
+
+            },
+            sheetSize: .fixed(436)
+        )
     }
     
     func delete() {

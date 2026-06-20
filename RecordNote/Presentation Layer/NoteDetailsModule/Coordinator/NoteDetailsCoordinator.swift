@@ -10,6 +10,7 @@ import UIKit
 final class NoteDetailsCoordinator: BaseCoordinator {
     var navigationController: UINavigationController
     let note: NoteRealModelInfoModel
+    private let sheetManager = CustomSheetManager()
 
     init(navigationController: UINavigationController,note: NoteRealModelInfoModel) {
         self.navigationController = navigationController
@@ -17,8 +18,16 @@ final class NoteDetailsCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = NoteDetailsViewModel(coordinator: self, noteModel: note, useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())))
-        let viewController = NoteDetailsViewController(viewModel: viewModel)
+        let viewModel = NoteDetailsViewModel(
+            coordinator: self,
+            noteModel: note,
+            useCases: NoteDetailsUseCases(respotery: NotesRespotery(realm: RealmStorage())),
+            sheetManager: sheetManager
+        )
+        let viewController = NoteDetailsViewController(
+            viewModel: viewModel,
+            sheetManager: sheetManager
+        )
 //        viewController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewController, animated: true)
     }
