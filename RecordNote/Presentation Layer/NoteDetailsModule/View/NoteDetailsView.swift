@@ -106,10 +106,7 @@ struct NoteDetailsView: View {
                 
                 Spacer()
                 
-                AudioPlayerView(viewModel: AudioPlayerViewModel(
-                    useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()),
-                        audioPlayer: AudioPlayerService()),
-                        model: viewModel.noteModel))
+                AudioPlayerView(viewModel: viewModel.audioPlayerViewModel)
                 .padding(.horizontal,-16)
             }
             .padding(.horizontal,16)
@@ -133,6 +130,11 @@ struct NoteDetailsView: View {
                 sheetManager.content
             },
             animated: false)
+        .onTapGesture {
+            if viewModel.isMenuOpen {
+                viewModel.isMenuOpen = false
+            }
+        }
         
     }
 }

@@ -9,8 +9,5 @@
 import Foundation
 
 protocol PDFExportServiceProtocol {
-    func export(
-        note: NoteRealModelInfoModel,
-        options: [PDFContentOption]
-    ) async throws -> URL?
+    func export(note: NoteRealModelInfoModel,duration: String ,options: [PDFContentOption]) async throws -> URL?
 }

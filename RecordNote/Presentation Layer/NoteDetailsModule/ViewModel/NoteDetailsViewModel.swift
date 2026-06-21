@@ -24,11 +24,14 @@ final class NoteDetailsViewModel: ObservableObject {
     @Published var selectedTab: NoteTab = .summary
     @Published var isMenuOpen: Bool = false
     @Published var pdfUrl: URL?
+    @Published var audioTotalValue: String = "00:00"
     private var selectedTabs: [PDFContentOption] = []
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
     private let sheetManager: CustomSheetManager
+    let audioPlayerViewModel: AudioPlayerViewModel
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         coordinator: NoteDetailsCoordinator,
@@ -40,10 +43,24 @@ final class NoteDetailsViewModel: ObservableObject {
         self.noteModel = noteModel
         self.useCases = useCases
         self.sheetManager = sheetManager
+        self.audioPlayerViewModel = AudioPlayerViewModel(
+            useCases: NotesUseCases(
+                notesRepository: NotesRespotery(realm: RealmStorage()),
+                audioPlayer: AudioPlayerService()
+            ),
+            model: noteModel
+        )
         
         tasksList = noteModel.tasks.map {
             return UITaskModel(title: $0.title, isDone: $0.isDone)
         }
+
+        audioPlayerViewModel.$totalValue
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] totalValue in
+                self?.audioTotalValue = totalValue
+            }
+            .store(in: &cancellables)
     }
     
     
@@ -114,6 +131,7 @@ extension NoteDetailsViewModel {
                             do {
                                 pdfUrl = try await useCases.execute(
                                     note: noteModel,
+                                    duration: audioTotalValue,
                                     options: selectedTabs
                                 )
                                 

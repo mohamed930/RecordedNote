@@ -21,9 +21,10 @@ final class NoteDetailsUseCases {
         respotery.updateTask(note: note, index: index, isDone: isDone)
     }
     
-    func execute(note: NoteRealModelInfoModel,options: [PDFContentOption]) async throws -> URL? {
+    func execute(note: NoteRealModelInfoModel,duration: String,options: [PDFContentOption]) async throws -> URL? {
         try await service.export(
             note: note,
+            duration: duration,
             options: options
         )
     }

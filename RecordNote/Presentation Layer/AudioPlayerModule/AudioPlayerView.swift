@@ -9,14 +9,10 @@ import SwiftUI
 
 struct AudioPlayerView: View {
     
-    @StateObject private var viewModel: AudioPlayerViewModel
+    @ObservedObject var viewModel: AudioPlayerViewModel
     
     let minLightIntensity = 1.0
     let maxLightIntensity = 5.0
-
-    init(viewModel: AudioPlayerViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
     
     var body: some View {
         ZStack {
