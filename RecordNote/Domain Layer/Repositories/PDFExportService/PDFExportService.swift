@@ -133,13 +133,21 @@ final class PDFExportService: PDFExportServiceProtocol {
             return nil
         }
 
-        let transcriptPages = PDFPageBuilder
-            .transcriptChunks(
+        let taskPages = options.contains(.tasks)
+            ? PDFPageBuilder.taskChunks(
+                from: Array(note.tasks)
+            )
+            : []
+
+        let transcriptPages = options.contains(.transcript)
+            ? PDFPageBuilder.transcriptChunks(
                 from: note.transcript
             )
+            : []
 
-        let totalPages = transcriptPages.count + 1
+        let totalPages = 1 + taskPages.count + transcriptPages.count
         var pages: [AnyView] = []
+        let exportDate = Date.now.formatted()
 
         pages.append(
             AnyView(
@@ -153,15 +161,29 @@ final class PDFExportService: PDFExportServiceProtocol {
             )
         )
 
-        for (index,page) in transcriptPages.enumerated() {
+        for taskPage in taskPages {
+            pages.append(
+                AnyView(
+                    PDFTasksPageView(
+                        exportDate: exportDate,
+                        noteDate: note.formattedDate,
+                        tasks: taskPage.tasks,
+                        currentPage: pages.count + 1,
+                        totalPages: totalPages
+                    )
+                )
+            )
+        }
+
+        for page in transcriptPages {
 
             pages.append(
                 AnyView(
                     PDFTranscriptPageView(
-                        noteTitle: note.name,
-                        exportDate: Date.now.formatted(),
+                        headerTitle: "Transcript",
+                        exportDate: exportDate,
                         paragraphs: page.transcriptParagraphs,
-                        currentPage: index + 2,
+                        currentPage: pages.count + 1,
                         totalPages: totalPages
                     )
                 )

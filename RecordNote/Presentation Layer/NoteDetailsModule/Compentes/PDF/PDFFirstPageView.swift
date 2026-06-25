@@ -48,41 +48,6 @@ struct PDFFirstPageView: View {
                 }
             }
 
-            if pdfOptions.contains(.tasks) {
-//                tasksSection
-                
-                sectionContainer(title: "Tasks",
-                                 icon: "checklist",
-                                 accentColor: .A_78_BFA) {
-                    
-                    VStack(alignment: .leading,spacing: 0) {
-                        ForEach(note.tasks, id: \.title) { task in
-                            HStack(alignment: .top) {
-                                TaskRow(
-                                    title: task.title,
-                                    isDone: task.isDone
-                                ) {}
-                                    .padding(.bottom,-5)
-                                
-                                Spacer()
-                                
-                                HStack(spacing: 4) {
-                                    Image(systemName: "calendar")
-                                    Text(note.formattedDate)
-                                }
-                                .setFont(fontName: .mainFont, size: 12)
-                                .foregroundStyle(Color._4_A_5565)
-                                .padding(.top, 18)
-                            }
-                            
-                            Divider()
-                                .padding(.bottom,-6)
-                        }
-                    }
-                }
-                .padding(.bottom)
-            }
-
             Spacer()
 
             PDFFooterView(currentPage: currentPage,

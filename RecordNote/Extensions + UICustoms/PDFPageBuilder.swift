@@ -11,6 +11,10 @@ struct PDFPageContent {
     let transcriptParagraphs: [String]
 }
 
+struct PDFTasksPageContent {
+    let tasks: [TaskModel]
+}
+
 extension String {
 
     func pdfParagraphs() -> [String] {
@@ -50,6 +54,32 @@ struct PDFPageBuilder {
                 transcriptParagraphs: Array(
                     paragraphs[startIndex..<endIndex]
                 )
+            )
+        }
+    }
+
+    static func taskChunks(
+        from tasks: [TaskModel],
+        tasksPerPage: Int = 8
+    ) -> [PDFTasksPageContent] {
+
+        guard !tasks.isEmpty else {
+            return []
+        }
+
+        return stride(
+            from: 0,
+            to: tasks.count,
+            by: tasksPerPage
+        ).map { startIndex in
+
+            let endIndex = min(
+                startIndex + tasksPerPage,
+                tasks.count
+            )
+
+            return PDFTasksPageContent(
+                tasks: Array(tasks[startIndex..<endIndex])
             )
         }
     }

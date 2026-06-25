@@ -1,17 +1,17 @@
 //
-//  PDFTranscriptPageView.swift
+//  PDFTasksPageView.swift
 //  RecordNote
 //
-//  Created by Mohamed Ali on 23/06/2026.
+//  Created by Codex on 25/06/2026.
 //
 
 import SwiftUI
 
-struct PDFTranscriptPageView: View {
+struct PDFTasksPageView: View {
 
-    let headerTitle: String
     let exportDate: String
-    let paragraphs: [String]
+    let noteDate: String
+    let tasks: [TaskModel]
     let currentPage: Int
     let totalPages: Int
 
@@ -19,24 +19,35 @@ struct PDFTranscriptPageView: View {
 
         VStack(alignment: .leading, spacing: 20) {
 
-            transcriptHeader
+            tasksHeader
 
-            ForEach(
-                paragraphs,
-                id: \.self
-            ) { paragraph in
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(tasks, id: \.title) { task in
+                    HStack(alignment: .top) {
+                        TaskRow(
+                            title: task.title,
+                            isDone: task.isDone
+                        ) {}
+                        .padding(.bottom, -5)
 
-                Text(paragraph)
-                    .font(.body)
-                    .foregroundStyle(.black)
-                    .frame(
-                        maxWidth: .infinity,
-                        alignment: .leading
-                    )
+                        Spacer()
+
+                        HStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                            Text(noteDate)
+                        }
+                        .setFont(fontName: .mainFont, size: 12)
+                        .foregroundStyle(Color._4_A_5565)
+                        .padding(.top, 18)
+                    }
+
+                    Divider()
+                        .padding(.bottom, -6)
+                }
             }
-            
+
             Spacer()
-            
+
             PDFFooterView(currentPage: currentPage,
                           totalPages: totalPages)
         }
@@ -50,12 +61,12 @@ struct PDFTranscriptPageView: View {
     }
 }
 
-private extension PDFTranscriptPageView {
+private extension PDFTasksPageView {
 
-    var transcriptHeader: some View {
-        
+    var tasksHeader: some View {
+
         VStack(alignment: .leading, spacing: 12) {
-            
+
             HStack {
                 Image(.recordAppNote)
                     .resizable()
@@ -79,13 +90,13 @@ private extension PDFTranscriptPageView {
                     Circle()
                         .fill(.A_78_BFA)
                         .overlay {
-                            Image(systemName: "mic")
+                            Image(systemName: "checklist")
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(.white)
                         }
                         .frame(width: 40, height: 40)
 
-                    Text(headerTitle)
+                    Text("Tasks")
                         .setFont(fontName: .mainFontBold, size: 18)
                         .foregroundStyle(.A_78_BFA)
                 }
@@ -100,20 +111,16 @@ private extension PDFTranscriptPageView {
 
 #Preview {
 
-    let chunks = PDFPageBuilder
-        .transcriptChunks(
-            from: NoteRealModelInfoModel
-                .pcintMock
-                .transcript
-        )
+    let taskPages = PDFPageBuilder.taskChunks(
+        from: Array(NoteRealModelInfoModel.pcintMock.tasks)
+    )
 
-    PDFTranscriptPageView(
-        headerTitle: "Transcript",
+    PDFTasksPageView(
         exportDate: "Today",
-        paragraphs: chunks[0]
-            .transcriptParagraphs,
+        noteDate: NoteRealModelInfoModel.pcintMock.formattedDate,
+        tasks: taskPages[0].tasks,
         currentPage: 2,
-        totalPages: 2
+        totalPages: 3
     )
     .scaleEffect(0.5)
 }
