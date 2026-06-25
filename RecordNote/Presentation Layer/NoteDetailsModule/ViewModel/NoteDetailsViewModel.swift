@@ -129,8 +129,9 @@ extension NoteDetailsViewModel {
                             }
                             
                             do {
+                                // MARK: - TODO: - return model to noteModel
                                 pdfUrl = try await useCases.execute(
-                                    note: noteModel,
+                                    note: .pcintMock,
                                     duration: audioTotalValue,
                                     options: selectedTabs
                                 )

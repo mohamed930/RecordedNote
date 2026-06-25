@@ -31,15 +31,12 @@ struct NotePDFView: View {
             }
             .padding(.horizontal, Layout.horizontalPadding)
 
-//            Spacer(minLength: 40)
-
             footerSection
         }
         .frame(
-            maxWidth: .infinity,
+            minHeight: Layout.pageMinHeight,
             alignment: .topLeading
         )
-        .padding(.top, 24)
         .background(Color.white)
     }
 }
@@ -51,7 +48,7 @@ private extension NotePDFView {
                 Image(.recordAppNote)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 34)
+                    .frame(width: 18)
 
                 Text("RecordNote")
                     .setFont(fontName: .mainFontBold, size: 15)
@@ -67,6 +64,7 @@ private extension NotePDFView {
             Divider()
                 .padding(.top, 16)
                 .padding(.bottom, 28)
+                .padding(.horizontal,Layout.headerHorizontalPadding)
 
             VStack(alignment: .leading, spacing: 10) {
                 Text(noteModel.name)
@@ -87,13 +85,13 @@ private extension NotePDFView {
 
         if hasContent {
             sectionContainer(
-                title: "Content",
+                title: "Summary",
                 icon: "doc.text",
                 accentColor: Color.A_78_BFA
             ) {
                 VStack(alignment: .leading, spacing: 20) {
                     if shouldShowSummary {
-                        textBlockSection(title: "Summary", text: noteModel.summary)
+                        textBlockSection(text: noteModel.summary)
                     }
 
                     if shouldShowTasks {
@@ -117,19 +115,21 @@ private extension NotePDFView {
     }
 
     var tasksBlock: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Tasks")
-                .setFont(fontName: .mainFontSemiBold, size: 16)
-                .foregroundStyle(Color._111827)
-
+        
+        sectionContainer(
+            title: "Tasks",
+            icon: "checklist",
+            accentColor: Color.A_78_BFA
+        ) {
             ForEach(noteModel.tasks, id: \.title) { task in
-                HStack(alignment: .top, spacing: 12) {
+                HStack(alignment: .top) {
                     TaskRow(
                         title: task.title,
                         isDone: task.isDone
                     ) {}
+                        .padding(.bottom,-26)
 
-                    Spacer(minLength: 12)
+                    Spacer()
 
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
@@ -141,6 +141,7 @@ private extension NotePDFView {
                 }
             }
         }
+        .padding(.bottom)
     }
 
     var footerSection: some View {
@@ -201,12 +202,8 @@ private extension NotePDFView {
         }
     }
 
-    func textBlockSection(title: String, text: String) -> some View {
+    func textBlockSection(text: String) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .setFont(fontName: .mainFontSemiBold, size: 16)
-                .foregroundStyle(Color._111827)
-
             Text(text)
                 .setFont(fontName: .mainFont, size: 15)
                 .foregroundStyle(Color._111827)
@@ -228,7 +225,7 @@ private extension NotePDFView {
 
 #Preview {
     NotePDFView(
-        noteModel: .mock,
+        noteModel: .pcintMock,
         duration: "10:00",
         exportedOptions: [.summary, .tasks, .transcript]
     )
