@@ -8,6 +8,7 @@
 import SwiftUI
 import RealmSwift
 import FittedSheetsSwiftUI
+import Combine
 
 // MARK: - NoteDetailsView
 
@@ -126,16 +127,30 @@ struct NoteDetailsView: View {
         .fittedSheet(
             isPresented: $sheetManager.isPresented,
             configuration: sheetManager.configuration,
-            sheetView:  {
-                sheetManager.content
+            sheetView: {
+                switch viewModel.activeSheet {
+                case .pdfOptions:
+                    PDFOptionsSheet(
+                        optionsSelected: viewModel.updatePDFOptions,
+                        buttonTapped: viewModel.generatePDF
+                    )
+
+                case .share(let item):
+                    ShareSheet(item: item) {
+                        viewModel.dismissActiveSheet()
+                    }
+
+                case nil:
+                    EmptyView()
+                }
             },
-            animated: false)
+            animated: false
+        )
         .onTapGesture {
             if viewModel.isMenuOpen {
                 viewModel.isMenuOpen = false
             }
         }
-        
     }
 }
 

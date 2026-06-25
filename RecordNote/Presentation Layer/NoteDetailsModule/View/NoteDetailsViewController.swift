@@ -36,4 +36,25 @@ final class NoteDetailsViewController: UIViewController {
             )
         )
     }
+    
+    override func present(
+        _ viewControllerToPresent: UIViewController,
+        animated flag: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        print("➡️ Presenting \(type(of: viewControllerToPresent))")
+        super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+
+    override func dismiss(
+        animated flag: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        print("⬅️ dismiss() called on NoteDetailsViewController")
+        Thread.callStackSymbols.forEach {
+            print($0)
+        }
+
+        super.dismiss(animated: flag, completion: completion)
+    }
 }

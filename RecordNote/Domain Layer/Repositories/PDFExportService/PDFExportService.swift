@@ -14,114 +14,6 @@ final class PDFExportService: PDFExportServiceProtocol {
         height: 841.8
     )
     
-    //    @MainActor
-    //    func export(
-    //    note: NoteRealModelInfoModel,
-    //    duration: String,
-    //    options: [PDFContentOption]
-    //    ) async throws -> URL? {
-    //        guard #available(iOS 16.0, *) else {
-    //            return nil
-    //        }
-    //
-    //        let chunks = PDFPageBuilder
-    //            .transcriptChunks(
-    //                from: note.transcript
-    //            )
-    //
-    //        print("Chunks Count:", chunks.count)
-    //
-    //        for (index, chunk) in chunks.enumerated() {
-    //            print(
-    //                "Chunk \(index + 1):",
-    //                chunk.transcriptParagraphs.count
-    //            )
-    //        }
-    //
-    //        return nil
-    //
-    ////        let content = makeContent(note: note,
-    ////                                  duration: duration,
-    ////                                  options: options)
-    ////
-    ////        let hostingController = UIHostingController(
-    ////            rootView: content
-    ////        )
-    ////
-    ////        let size = hostingController.sizeThatFits(
-    ////            in: CGSize(
-    ////                width: a4Size.width,
-    ////                height: .greatestFiniteMagnitude
-    ////            )
-    ////        )
-    ////
-    ////        print("size Heigh: \(size.height)")
-    ////
-    ////        let contentHeight = size.height
-    ////        let safePageHeight = a4Size.height - 60
-    ////
-    ////        let pageCount = Int(
-    ////            ceil(contentHeight / safePageHeight)
-    ////        )
-    ////
-    ////        print("Content Height:", contentHeight)
-    ////        print("Pages:", pageCount)
-    ////
-    ////        let renderer = ImageRenderer(content: content)
-    ////        renderer.scale = 1
-    ////
-    ////        let url = FileManager.default
-    ////            .temporaryDirectory
-    ////            .appendingPathComponent("note.pdf")
-    ////
-    ////        var mediaBox = CGRect(
-    ////            origin: .zero,
-    ////            size: a4Size
-    ////        )
-    ////
-    ////        guard let pdf = CGContext(
-    ////            url as CFURL,
-    ////            mediaBox: &mediaBox,
-    ////            nil
-    ////        ) else {
-    ////            return nil
-    ////        }
-    ////
-    ////
-    ////        for pageIndex in 0..<pageCount {
-    ////
-    ////            let pageTopInset: CGFloat = 50
-    ////            let offsetY = CGFloat(pageIndex) * safePageHeight
-    ////
-    ////            pdf.beginPDFPage(nil)
-    ////
-    ////            renderer.render { _, renderContext in
-    ////
-    ////                pdf.saveGState()
-    ////
-    ////                pdf.clip(to: CGRect(
-    ////                    x: 0,
-    ////                    y: 0,
-    ////                    width: a4Size.width,
-    ////                    height: a4Size.height
-    ////                ))
-    ////
-    ////                pdf.translateBy(
-    ////                    x: 0,
-    ////                    y: pageTopInset - offsetY
-    ////                )
-    ////
-    ////                renderContext(pdf)
-    ////
-    ////                pdf.restoreGState()
-    ////            }
-    ////
-    ////            pdf.endPDFPage()
-    ////        }
-    ////
-    ////        return url
-    //    }
-    
     @MainActor
     func export(
         note: NoteRealModelInfoModel,
@@ -194,7 +86,7 @@ final class PDFExportService: PDFExportServiceProtocol {
 
         let url = FileManager.default
             .temporaryDirectory
-            .appendingPathComponent("note.pdf")
+            .appendingPathComponent("\(note.name)-\(Date()).pdf")
 
         var mediaBox = CGRect(
             origin: .zero,

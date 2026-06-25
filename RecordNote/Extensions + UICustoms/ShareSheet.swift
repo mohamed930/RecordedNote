@@ -1,0 +1,39 @@
+//
+//  ShareSheet.swift
+//  RecordNote
+//
+//  Created by Mohamed Ali on 25/06/2026.
+//
+
+import SwiftUI
+import UIKit
+
+struct ShareItem: Identifiable {
+    let id: String
+    let items: [Any]
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+
+    let item: ShareItem
+    var onDismiss: (() -> Void)?
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+
+        let controller = UIActivityViewController(
+            activityItems: item.items,
+            applicationActivities: nil
+        )
+
+        controller.completionWithItemsHandler = { _, _, _, _ in
+            onDismiss?()
+        }
+
+        return controller
+    }
+
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: Context
+    ) { }
+}

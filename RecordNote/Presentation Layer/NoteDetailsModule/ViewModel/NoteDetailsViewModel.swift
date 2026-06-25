@@ -15,6 +15,11 @@ struct UITaskModel {
     var isDone: Bool
 }
 
+enum ActiveSheet {
+    case pdfOptions
+    case share(ShareItem)
+}
+
 final class NoteDetailsViewModel: ObservableObject {
     
     // MARK: - Published.
@@ -23,9 +28,9 @@ final class NoteDetailsViewModel: ObservableObject {
     @Published var tasksList: [UITaskModel] = []
     @Published var selectedTab: NoteTab = .summary
     @Published var isMenuOpen: Bool = false
-    @Published var pdfUrl: URL?
     @Published var audioTotalValue: String = "00:00"
     private var selectedTabs: [PDFContentOption] = []
+    @Published var activeSheet: ActiveSheet?
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
@@ -106,51 +111,61 @@ extension NoteDetailsViewModel {
     }
     
     @MainActor
+    func updatePDFOptions(_ selectedOptions: Set<PDFContentOption>) {
+        selectedTabs = Array(selectedOptions)
+    }
+    
+    func generatePDF(finishLoading: @escaping () -> Void) {
+        let note = noteModel
+        let duration = audioTotalValue
+        let options = selectedTabs
+
+        Task { [weak self] in
+            guard let self else {
+                await MainActor.run { finishLoading() }
+                return
+            }
+            
+            do {
+                guard let pdfUrl = try await useCases.execute(
+                    note: note,
+                    duration: duration,
+                    options: options
+                ) else {
+                    await MainActor.run { finishLoading() }
+                    return
+                }
+                
+                await MainActor.run {
+                    finishLoading()
+                    activeSheet = .share(
+                        ShareItem(
+                            id: note.id,
+                            items: [pdfUrl]
+                        )
+                    )
+                }
+            } catch {
+                await MainActor.run {
+                    finishLoading()
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    func dismissActiveSheet() {
+        activeSheet = nil
+        sheetManager.dismiss()
+    }
+    
+    @MainActor
     func savePdf() {
         isMenuOpen = false
+        activeSheet = .pdfOptions
 
-        sheetManager.present(
-            content: {
-                PDFOptionsSheet { [weak self] selectedTab in
-                        guard let self else { return }
-                        
-                        selectedTabs = Array(selectedTab)
-                    }
-                    buttonTapped: { [weak self] finishLoading in
-                        guard let self else {
-                            finishLoading()
-                            return
-                        }
-                        
-                        Task { [weak self] in
-                            guard let self else {
-                                finishLoading()
-                                return
-                            }
-                            
-                            do {
-                                // MARK: - TODO: - return model to noteModel
-                                pdfUrl = try await useCases.execute(
-                                    note: .pcintMock,
-                                    duration: audioTotalValue,
-                                    options: selectedTabs
-                                )
-                                
-                                print("F: \(pdfUrl)")
-
-                                finishLoading()
-//                                showShareSheet = true
-
-                            } catch {
-                                finishLoading()
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
-
-            },
-            sheetSize: .fixed(436)
-        )
+        sheetManager.present(sheetSize: .fixed(436))
     }
     
     func delete() {

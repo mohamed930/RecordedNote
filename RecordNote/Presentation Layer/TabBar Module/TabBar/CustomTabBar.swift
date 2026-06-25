@@ -70,6 +70,16 @@ class CustomTabBarController: UITabBarController {
         
         
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("CustomTabBarController disappeared")
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("CustomTabBarController will disappear")
+    }
 
     @objc private func centerButtonTapped() {
         // Handle the center button tap event

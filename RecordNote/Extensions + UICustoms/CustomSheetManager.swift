@@ -15,8 +15,7 @@ class CustomSheetManager: ObservableObject {
     @Published var content: AnyView = AnyView(EmptyView())
     private(set) var configuration: SheetConfiguration = SheetConfiguration()
 
-    func present<Content: View>(
-        @ViewBuilder content: @escaping () -> Content,
+    func present(
         sheetSize: SheetSize = .fixed(260),
         useFullScreenMode: Bool = false,
         cornerCurve: CALayerCornerCurve = .circular,
@@ -41,8 +40,31 @@ class CustomSheetManager: ObservableObject {
             ]
         )
 
-        self.content = AnyView(content())
         self.isPresented = true
+    }
+
+    func present<Content: View>(
+        @ViewBuilder content: @escaping () -> Content,
+        sheetSize: SheetSize = .fixed(260),
+        useFullScreenMode: Bool = false,
+        cornerCurve: CALayerCornerCurve = .circular,
+        cornerRadius: CGFloat = 20,
+        minimumSpaceAbovePullBar: CGFloat = 0,
+        dismissOnOverlayTap: Bool = true,
+        allowPullingPastMaxHeight: Bool = false,
+        allowPullingPastMinHeight: Bool = true
+    ) {
+        present(
+            sheetSize: sheetSize,
+            useFullScreenMode: useFullScreenMode,
+            cornerCurve: cornerCurve,
+            cornerRadius: cornerRadius,
+            minimumSpaceAbovePullBar: minimumSpaceAbovePullBar,
+            dismissOnOverlayTap: dismissOnOverlayTap,
+            allowPullingPastMaxHeight: allowPullingPastMaxHeight,
+            allowPullingPastMinHeight: allowPullingPastMinHeight
+        )
+        self.content = AnyView(content())
     }
 
     func dismiss() {
