@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 import RealmSwift
-import FittedSheets
+import BottomSheet
 
 struct UITaskModel {
     let title: String
@@ -30,7 +30,7 @@ final class NoteDetailsViewModel: ObservableObject {
     @Published var isMenuOpen: Bool = false
     @Published var audioTotalValue: String = "00:00"
     private var selectedTabs: [PDFContentOption] = []
-    @Published var activeSheet: ActiveSheet?
+    @Published var shareItem: ShareItem?
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
@@ -136,14 +136,21 @@ extension NoteDetailsViewModel {
                     return
                 }
                 
-                await MainActor.run {
+                await MainActor.run { [weak self] in
+                    guard let self else { return }
+                    
                     finishLoading()
-                    activeSheet = .share(
-                        ShareItem(
-                            id: note.id,
-                            items: [pdfUrl]
-                        )
-                    )
+                    
+                    sheetManager.onDismiss = { [weak self] in
+                        guard let self else { return }
+                        
+                        print(sheetManager.position)
+                        
+                        self.shareItem = ShareItem(id: noteModel.id, items: [pdfUrl])
+                        self.sheetManager.onDismiss = nil
+                    }
+                    
+                    sheetManager.position = .hidden
                 }
             } catch {
                 await MainActor.run {
@@ -153,19 +160,13 @@ extension NoteDetailsViewModel {
             }
         }
     }
-
-    @MainActor
-    func dismissActiveSheet() {
-        activeSheet = nil
-        sheetManager.dismiss()
-    }
     
     @MainActor
     func savePdf() {
         isMenuOpen = false
-        activeSheet = .pdfOptions
 
-        sheetManager.present(sheetSize: .fixed(436))
+        sheetManager.enableSwipeToDismiss = false
+        sheetManager.position = .absolute(416)
     }
     
     func delete() {

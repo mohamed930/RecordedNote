@@ -16,7 +16,6 @@ struct ShareItem: Identifiable {
 struct ShareSheet: UIViewControllerRepresentable {
 
     let item: ShareItem
-    var onDismiss: (() -> Void)?
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
 
@@ -24,10 +23,8 @@ struct ShareSheet: UIViewControllerRepresentable {
             activityItems: item.items,
             applicationActivities: nil
         )
-
-        controller.completionWithItemsHandler = { _, _, _, _ in
-            onDismiss?()
-        }
+        
+        controller.modalPresentationStyle = .formSheet
 
         return controller
     }

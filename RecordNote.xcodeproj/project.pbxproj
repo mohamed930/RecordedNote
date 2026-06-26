@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		D33218FD2FCE0311001F605A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D33218FC2FCE0311001F605A /* GoogleSignInSwift */; };
 		D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D38852462FC6260B001D8A77 /* IQKeyboardManagerSwift */; };
-		D3B5EB912FE6D75E00289B46 /* FittedSheetsSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = D3B5EB902FE6D75E00289B46 /* FittedSheetsSwiftUI */; };
 		D3BB312B2FC71650000A8DFD /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312A2FC71650000A8DFD /* Reachability */; };
 		D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB312D2FC71764000A8DFD /* PlainPing */; };
 		D3BB31312FC71883000A8DFD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D3BB31302FC71883000A8DFD /* Alamofire */; };
 		D3C755F52FD465E00004A745 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D3C755F42FD465E00004A745 /* RealmSwift */; };
+		D3CCBECC2FEEC4E100133EB4 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D3CCBECB2FEEC4E100133EB4 /* BottomSheet */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,11 +63,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D33218FD2FCE0311001F605A /* GoogleSignInSwift in Frameworks */,
+				D3CCBECC2FEEC4E100133EB4 /* BottomSheet in Frameworks */,
 				D3C755F52FD465E00004A745 /* RealmSwift in Frameworks */,
 				D3BB312E2FC71764000A8DFD /* PlainPing in Frameworks */,
 				D3BB31312FC71883000A8DFD /* Alamofire in Frameworks */,
 				D38852472FC6260B001D8A77 /* IQKeyboardManagerSwift in Frameworks */,
-				D3B5EB912FE6D75E00289B46 /* FittedSheetsSwiftUI in Frameworks */,
 				D3BB312B2FC71650000A8DFD /* Reachability in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,7 +136,7 @@
 				D3BB31302FC71883000A8DFD /* Alamofire */,
 				D33218FC2FCE0311001F605A /* GoogleSignInSwift */,
 				D3C755F42FD465E00004A745 /* RealmSwift */,
-				D3B5EB902FE6D75E00289B46 /* FittedSheetsSwiftUI */,
+				D3CCBECB2FEEC4E100133EB4 /* BottomSheet */,
 			);
 			productName = RecordNote;
 			productReference = D38850A62FC5D1EC001D8A77 /* RecordNote.app */;
@@ -227,7 +227,7 @@
 				D3BB312F2FC71883000A8DFD /* XCRemoteSwiftPackageReference "Alamofire" */,
 				D33218FB2FCE0311001F605A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				D3C755F12FD465E00004A745 /* XCRemoteSwiftPackageReference "realm-swift" */,
-				D3B5EB8F2FE6D75E00289B46 /* XCRemoteSwiftPackageReference "FittedSheets-SwiftUI" */,
+				D3CCBECA2FEEC4E100133EB4 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D38850A72FC5D1EC001D8A77 /* Products */;
@@ -671,14 +671,6 @@
 				minimumVersion = 8.0.3;
 			};
 		};
-		D3B5EB8F2FE6D75E00289B46 /* XCRemoteSwiftPackageReference "FittedSheets-SwiftUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Jeonhui/FittedSheets-SwiftUI.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.1;
-			};
-		};
 		D3BB31292FC71650000A8DFD /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
@@ -711,6 +703,14 @@
 				kind = branch;
 			};
 		};
+		D3CCBECA2FEEC4E100133EB4 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucaszischka/BottomSheet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -723,11 +723,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D38852452FC6260B001D8A77 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
-		};
-		D3B5EB902FE6D75E00289B46 /* FittedSheetsSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3B5EB8F2FE6D75E00289B46 /* XCRemoteSwiftPackageReference "FittedSheets-SwiftUI" */;
-			productName = FittedSheetsSwiftUI;
 		};
 		D3BB312A2FC71650000A8DFD /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -748,6 +743,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3C755F12FD465E00004A745 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		D3CCBECB2FEEC4E100133EB4 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3CCBECA2FEEC4E100133EB4 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
