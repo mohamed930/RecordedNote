@@ -107,7 +107,9 @@ extension NoteDetailsViewModel {
     }
     
     func share() {
+        isMenuOpen = false
         
+        self.shareItem = ShareItem(id: noteModel.id, items: [noteModel.shareText])
     }
     
     @MainActor
@@ -170,6 +172,6 @@ extension NoteDetailsViewModel {
     }
     
     func delete() {
-        
+        isMenuOpen = false
     }
 }

@@ -116,6 +116,44 @@ extension NoteRealModelInfoModel {
     }
 }
 
+extension NoteRealModelInfoModel {
+
+    var shareText: String {
+        var sections: [String] = []
+
+        sections.append("📝 \(name)")
+        sections.append("Date: \(formattedDate) • \(formattedTime)")
+
+        if !summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            sections.append("""
+            📄 Summary
+            \(summary)
+            """)
+        }
+
+        if !tasks.isEmpty {
+            let taskText = tasks.map {
+                "\($0.isDone ? "✅" : "⬜️") \($0.title)"
+            }
+            .joined(separator: "\n")
+
+            sections.append("""
+            ✅ Tasks
+            \(taskText)
+            """)
+        }
+
+        if !transcript.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            sections.append("""
+            🗣 Transcript
+            \(transcript)
+            """)
+        }
+
+        return sections.joined(separator: "\n\n")
+    }
+}
+
 
 // MARK: - For PDF Stress Test
 extension NoteRealModelInfoModel {

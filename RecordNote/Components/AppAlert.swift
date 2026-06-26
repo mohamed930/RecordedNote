@@ -5,14 +5,6 @@
 //  Created by Mohamed Ali on 26/05/2026.
 //
 
-
-//
-//  AppAlert.swift
-//  RecordNote
-//
-//  Created by Mohamed Ali on 26/05/2026.
-//
-
 import SwiftUI
 
 struct AppAlert: View {
@@ -203,7 +195,7 @@ struct AppAlert: View {
             message: "Are you sure you want to delete this voice note permanently?",
             actionTitle: "Delete",
             cancelTitle: "Cancel",
-            hideCancelButton: true,
+            hideCancelButton: false,
             action: {
                 print("Delete tapped")
             },
