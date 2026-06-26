@@ -104,10 +104,6 @@ extension View {
                     manager.onDismiss?()
                 }
             }
-//            .onDismiss {
-//                print("✅ BottomSheet dismissed")
-//                manager.onDismiss?()
-//            }
     }
     
     @ViewBuilder

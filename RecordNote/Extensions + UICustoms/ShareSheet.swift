@@ -23,8 +23,6 @@ struct ShareSheet: UIViewControllerRepresentable {
             activityItems: item.items,
             applicationActivities: nil
         )
-        
-        controller.modalPresentationStyle = .formSheet
 
         return controller
     }

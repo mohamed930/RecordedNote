@@ -123,20 +123,3 @@ final class PDFExportService: PDFExportServiceProtocol {
         return url
     }
 }
-
-extension PDFExportService {
-    
-    private func makeContent(
-        note: NoteRealModelInfoModel,
-        duration: String,
-        options: [PDFContentOption]
-    ) -> some View {
-        NotePDFView(
-            noteModel: note,
-            duration: duration,
-            exportedOptions: options
-        )
-        .frame(width: a4Size.width)
-        .background(.white)
-    }
-}
