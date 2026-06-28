@@ -173,6 +173,7 @@ struct SignupView: View {
             if viewModel.errorFlag {
 
                 AppAlert(
+                    isPresented: $viewModel.errorFlag,
                     image: .attension,
                     title: "Error",
                     message: viewModel.errorMessage,
@@ -184,8 +185,7 @@ struct SignupView: View {
                     },
                     backgroundTapAction: {
                         viewModel.errorFlag = false
-                    },
-                    isPresented: $viewModel.errorFlag
+                    }
                 )
             }
         }

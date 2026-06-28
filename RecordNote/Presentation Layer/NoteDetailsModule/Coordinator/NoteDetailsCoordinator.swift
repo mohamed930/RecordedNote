@@ -7,14 +7,24 @@
 
 import UIKit
 
+protocol NoteDetailsCoordinatorDelegate: AnyObject {
+    func noteDetailsCoordinatorDidRequestRefresh(_ coordinator: NoteDetailsCoordinator)
+}
+
 final class NoteDetailsCoordinator: BaseCoordinator {
     var navigationController: UINavigationController
     let note: NoteRealModelInfoModel
     private let sheetManager = CustomSheetManager()
+    weak var delegate: NoteDetailsCoordinatorDelegate?
 
-    init(navigationController: UINavigationController,note: NoteRealModelInfoModel) {
+    init(
+        navigationController: UINavigationController,
+        note: NoteRealModelInfoModel,
+        delegate: NoteDetailsCoordinatorDelegate? = nil
+    ) {
         self.navigationController = navigationController
         self.note = note
+        self.delegate = delegate
     }
 
     override func start() {
@@ -32,7 +42,12 @@ final class NoteDetailsCoordinator: BaseCoordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    func dismissToParentScreen() {
+    func dismissToParentScreen(shouldRefresh: Bool = false) {
+        if shouldRefresh {
+            delegate?.noteDetailsCoordinatorDidRequestRefresh(self)
+        }
+
+        removeFromParant()
         navigationController.popViewController(animated: true)
     }
 }

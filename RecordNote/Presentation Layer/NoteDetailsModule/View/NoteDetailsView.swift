@@ -122,6 +122,18 @@ struct NoteDetailsView: View {
                     value: viewModel.isMenuOpen
                 )
             }
+            
+            if viewModel.showAlert {
+                AppAlert(isPresented: $viewModel.showAlert,
+                         image: .attension,
+                         title: "Delete Note",
+                         message: "Are you sure to delete note?",
+                         actionTitle: "Delete",
+                         cancelTitle: "Cancel",
+                         action:  {
+                    viewModel.deleteOperation()
+                })
+            }
         }
         .appBottomSheet(manager: sheetManager, content: {
             PDFOptionsSheet(

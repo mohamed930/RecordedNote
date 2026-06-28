@@ -27,4 +27,3 @@ final class NotesViewController: UIViewController {
         addHosting(NotesView(viewModel: viewModel))
     }
 }
-

@@ -24,13 +24,15 @@ final class NoteDetailsViewModel: ObservableObject {
     
     // MARK: - Published.
     @Published var category: String = "Meeting"
-    @Published var noteModel: NoteRealModelInfoModel
+    @Published var note: NoteRealModelInfoModel
+    @Published var noteModel: NoteDTO
     @Published var tasksList: [UITaskModel] = []
     @Published var selectedTab: NoteTab = .summary
     @Published var isMenuOpen: Bool = false
     @Published var audioTotalValue: String = "00:00"
     private var selectedTabs: [PDFContentOption] = []
     @Published var shareItem: ShareItem?
+    @Published var showAlert: Bool = false
     
     private weak var coordinator: NoteDetailsCoordinator?
     var useCases: NoteDetailsUseCases
@@ -45,7 +47,8 @@ final class NoteDetailsViewModel: ObservableObject {
         sheetManager: CustomSheetManager
     ) {
         self.coordinator = coordinator
-        self.noteModel = noteModel
+        self.note = noteModel
+        self.noteModel = noteModel.toDTO()
         self.useCases = useCases
         self.sheetManager = sheetManager
         self.audioPlayerViewModel = AudioPlayerViewModel(
@@ -79,7 +82,7 @@ final class NoteDetailsViewModel: ObservableObject {
     }
     
     func selectedNoteRowAction(index: Int) {
-        let flag = useCases.updateTaskDetails(note: noteModel, index: index, isDone: !noteModel.tasks[index].isDone)
+        let flag = useCases.updateTaskDetails(note: note, index: index, isDone: !note.tasks[index].isDone)
         
         if flag {
             tasksList[index].isDone.toggle()
@@ -109,7 +112,7 @@ extension NoteDetailsViewModel {
     func share() {
         isMenuOpen = false
         
-        self.shareItem = ShareItem(id: noteModel.id, items: [noteModel.shareText])
+        self.shareItem = ShareItem(id: noteModel.id, items: [note.shareText])
     }
     
     @MainActor
@@ -118,7 +121,7 @@ extension NoteDetailsViewModel {
     }
     
     func generatePDF(finishLoading: @escaping () -> Void) {
-        let note = noteModel
+        let note = note
         let duration = audioTotalValue
         let options = selectedTabs
 
@@ -173,5 +176,13 @@ extension NoteDetailsViewModel {
     
     func delete() {
         isMenuOpen = false
+        showAlert = true
+    }
+    
+    @MainActor
+    func deleteOperation() {
+        if useCases.deleteNote(note: note) {
+            coordinator?.dismissToParentScreen(shouldRefresh: true)
+        }
     }
 }

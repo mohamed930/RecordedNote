@@ -49,11 +49,15 @@ final class NotesRespotery: NotesRespoteryProtocol {
     }
     
     func updateTask(note: NoteRealModelInfoModel,index: Int,isDone: Bool) -> Bool {
-        var updateNote = note
-//        updateNote.tasks[index].isDone = isDone
+        let updateNote = note
         return realm.update {
             updateNote.tasks[index].isDone = isDone
         }
+    }
+    
+    func deleteNote(note: NoteRealModelInfoModel) -> Bool {
+        let backup = note
+        return realm.delete(backup)
     }
     
 }

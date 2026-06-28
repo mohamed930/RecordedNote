@@ -153,6 +153,7 @@ struct LoginView: View {
             if viewModel.errorFlag {
 
                 AppAlert(
+                    isPresented: $viewModel.errorFlag,
                     image: .attension,
                     title: "Error",
                     message: "Email or password isn't correct",
@@ -164,8 +165,7 @@ struct LoginView: View {
                     },
                     backgroundTapAction: {
                         viewModel.errorFlag = false
-                    },
-                    isPresented: $viewModel.errorFlag
+                    }
                 )
             }
         }

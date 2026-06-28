@@ -154,6 +154,32 @@ extension NoteRealModelInfoModel {
     }
 }
 
+extension NoteRealModelInfoModel {
+
+    func toDTO() -> NoteDTO {
+        NoteDTO(
+            id: id,
+            name: name,
+            date: date,
+            summary: summary,
+            transcript: transcript,
+            isFav: isFav,
+            audio: audio,
+            tasks: tasks.map { $0.toDTO() }
+        )
+    }
+}
+
+extension TaskModel {
+
+    func toDTO() -> TaskDTO {
+        TaskDTO(
+            title: title,
+            isDone: isDone
+        )
+    }
+}
+
 
 // MARK: - For PDF Stress Test
 extension NoteRealModelInfoModel {

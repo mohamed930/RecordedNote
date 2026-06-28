@@ -61,4 +61,8 @@ final class HomeViewModel: ObservableObject {
         
         coordinator?.moveToNoteDetailsScreen(note: model)
     }
+
+    func refreshNotesContent() {
+        fetchNotes()
+    }
 }

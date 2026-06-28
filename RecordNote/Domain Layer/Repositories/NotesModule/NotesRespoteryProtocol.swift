@@ -12,4 +12,5 @@ protocol NotesRespoteryProtocol {
     func filterNotes(filter: NotesFilterValues) -> [MeetingNoteCardAttributes]
     func convertNoteToNoteRealModel(id: String) -> NoteRealModelInfoModel?
     func updateTask(note: NoteRealModelInfoModel,index: Int,isDone: Bool) -> Bool
+    func deleteNote(note: NoteRealModelInfoModel) -> Bool
 }

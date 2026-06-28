@@ -31,6 +31,10 @@ final class NotesViewModel: ObservableObject {
     private func fetchNotes() {
         notes = useCases.fetchNotes()
     }
+
+    func refreshNotesContent() {
+        fetchNotes()
+    }
     
     func addButtonAction() {
         coordinator?.moveToNewNoteScreen()

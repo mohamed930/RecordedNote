@@ -9,6 +9,10 @@ import SwiftUI
 
 struct AppAlert: View {
 
+    // MARK: - Binding
+
+    @Binding var isPresented: Bool
+
     // MARK: - Properties
 
     let image: ImageResource?
@@ -24,10 +28,6 @@ struct AppAlert: View {
     var action: (() -> Void)?
     var cancelAction: (() -> Void)?
     var backgroundTapAction: (() -> Void)?
-
-    // MARK: - Binding
-
-    @Binding var isPresented: Bool
 
     // MARK: - Body
 
@@ -189,7 +189,7 @@ struct AppAlert: View {
         Color.gray.opacity(0.2)
             .ignoresSafeArea()
 
-        AppAlert(
+        AppAlert(isPresented: .constant(true),
             image: .attension,
             title: "Delete Note?",
             message: "Are you sure you want to delete this voice note permanently?",
@@ -201,8 +201,7 @@ struct AppAlert: View {
             },
             cancelAction: {
                 print("Cancel tapped")
-            },
-            isPresented: .constant(true)
-        )
+            }
+         )
     }
 }

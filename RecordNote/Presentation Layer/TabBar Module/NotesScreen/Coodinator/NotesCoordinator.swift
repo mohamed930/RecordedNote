@@ -9,6 +9,7 @@ import UIKit
 
 final class NotesCoordinator: BaseCoordinator {
     var navigationController: UINavigationController
+    private weak var viewModel: NotesViewModel?
     
     private let title = ""
     private let imgName: UIImage = .unSelectedNotes
@@ -19,7 +20,14 @@ final class NotesCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        let viewModel      = NotesViewModel(coordinator: self, useCases: NotesUseCases(notesRepository: NotesRespotery(realm: RealmStorage()), audioPlayer: AudioPlayerService()))
+        let viewModel = NotesViewModel(
+            coordinator: self,
+            useCases: NotesUseCases(
+                notesRepository: NotesRespotery(realm: RealmStorage()),
+                audioPlayer: AudioPlayerService()
+            )
+        )
+        self.viewModel = viewModel
         let viewController = NotesViewController(viewModel: viewModel)
         viewController.tabBarItem = UITabBarItem(title: title, image: imgName, selectedImage: selectedimgName)
         navigationController.pushViewController(viewController, animated: true)
@@ -32,8 +40,19 @@ final class NotesCoordinator: BaseCoordinator {
     }
     
     func moveToNoteDetailsScreen(note: NoteRealModelInfoModel) {
-        let coordinator = NoteDetailsCoordinator(navigationController: navigationController, note: note)
+        let coordinator = NoteDetailsCoordinator(
+            navigationController: navigationController,
+            note: note,
+            delegate: self
+        )
+        coordinator.parantCoordinator = self
         add(coordinator: coordinator)
         coordinator.start()
+    }
+}
+
+extension NotesCoordinator: NoteDetailsCoordinatorDelegate {
+    func noteDetailsCoordinatorDidRequestRefresh(_ coordinator: NoteDetailsCoordinator) {
+        viewModel?.refreshNotesContent()
     }
 }
