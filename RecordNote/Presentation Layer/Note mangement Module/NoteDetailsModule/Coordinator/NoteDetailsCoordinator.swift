@@ -38,7 +38,7 @@ final class NoteDetailsCoordinator: BaseCoordinator {
             viewModel: viewModel,
             sheetManager: sheetManager
         )
-//        viewController.hidesBottomBarWhenPushed = true
+
         navigationController.pushViewController(viewController, animated: true)
     }
     
@@ -49,5 +49,11 @@ final class NoteDetailsCoordinator: BaseCoordinator {
 
         removeFromParant()
         navigationController.popViewController(animated: true)
+    }
+    
+    func moveToEditNoteScreen() {
+        let coordinator = EditNoteCoordinator(navigationController: navigationController, note: note)
+        add(coordinator: coordinator)
+        coordinator.start()
     }
 }

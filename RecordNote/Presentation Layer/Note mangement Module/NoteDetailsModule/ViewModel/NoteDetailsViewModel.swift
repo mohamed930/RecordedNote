@@ -101,12 +101,17 @@ final class NoteDetailsViewModel: ObservableObject {
             delete()
         }
     }
+    
+    private func moveToEditNoteDetails() {
+        coordinator?.moveToEditNoteScreen()
+    }
 }
 
 // MARK: - Menu action.
 extension NoteDetailsViewModel {
     func edit() {
-        
+        isMenuOpen = false
+        moveToEditNoteDetails()
     }
     
     func share() {
