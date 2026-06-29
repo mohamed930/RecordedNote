@@ -35,7 +35,7 @@ struct EditNoteView: View {
                 Spacer()
                 
                 Button {
-                    viewModel.backToNoteDetailsScreen()
+                    viewModel.saveEditAndRefreshScreen()
                 } label: {
                     Text("Save")
                         .setFont(fontName: .mainFontBold, size: 20)
@@ -84,7 +84,7 @@ struct EditNoteView: View {
                                     .setFont(fontName: .mainFont, size: 14)
                                     .foregroundStyle(Color._99_A_1_AF)
                                 
-                                Text(viewModel.note.formattedDate)
+                                Text(viewModel.selectedDate.formatted(.dateTime.day().month(.abbreviated).year()))
                                     .setFont(fontName: .mainFont, size: 12)
                                     .foregroundStyle(Color._6_B_7280)
                             }
@@ -100,7 +100,7 @@ struct EditNoteView: View {
                                     .setFont(fontName: .mainFont, size: 14)
                                     .foregroundStyle(Color._99_A_1_AF)
                                 
-                                Text(viewModel.note.formattedTime)
+                                Text(viewModel.selectedDate.formatted(date: .omitted, time: .shortened))
                                     .setFont(fontName: .mainFont, size: 12)
                                     .foregroundStyle(Color._6_B_7280)
                             }
@@ -129,6 +129,45 @@ struct EditNoteView: View {
             .padding(.horizontal,20)
             
             Spacer()
+        }
+        .overlay {
+
+            if viewModel.showCalendar {
+
+                ZStack {
+                    Color.black.opacity(0.45)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            viewModel.discardDateSelection()
+                        }
+
+                    switch viewModel.overlayMode {
+                    case .date:
+                        CalendarPickerView(
+                            configuration: viewModel.calenderConfiguration,
+                            selectedDate: $viewModel.draftSelectedDate,
+                            onConfirm: viewModel.confirmDateSelection,
+                            onCancel: viewModel.discardDateSelection
+                        )
+                        .frame(width: 340)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .shadow(radius: 20)
+
+                    case .time:
+                        TimePickerOverlayView(
+                            configuration: viewModel.calenderConfiguration,
+                            selectedTime: $viewModel.draftSelectedTime,
+                            onConfirm: viewModel.confirmTimeSelection,
+                            onCancel: viewModel.discardDateSelection
+                        )
+                        .frame(width: 340)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .shadow(radius: 20)
+                    }
+                }
+            }
         }
     }
 }
