@@ -12,7 +12,7 @@ struct EditNoteView: View {
     @ObservedObject var viewModel: EditNoteViewModel
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading,spacing: 0) {
             
             // MARK: - Header view.
             HStack(spacing: 0) {
@@ -127,6 +127,23 @@ struct EditNoteView: View {
             .frame(maxHeight: 151)
             .borderedCornerRadius(12, corners: .allCorners, lineWidth: 1, borderColor: .EBEBEF)
             .padding(.horizontal,20)
+            .padding(.bottom,16)
+            
+            NotesSegmentView(selectedTab: $viewModel.selectedTab,
+                            isTappedImageVisisble: true)
+                .padding(.bottom,22)
+                .padding(.horizontal,16)
+            
+            switch viewModel.selectedTab {
+            case .summary:
+                returnUpdateSection(title: "Summary", txt: $viewModel.noteSummary, count: viewModel.countString)
+            case .transcript:
+                returnUpdateSection(title: "Transcript", txt: $viewModel.noteTranscript, count: viewModel.transScriptCount)
+            case .tasks:
+                EmptyView()
+            }
+            
+            
             
             Spacer()
         }
@@ -169,6 +186,34 @@ struct EditNoteView: View {
                 }
             }
         }
+    }
+    
+    @ViewBuilder
+    private func returnUpdateSection(title: String,txt: Binding<String>,count: String) -> some View {
+        Text(title)
+            .setFont(fontName: .mainFontBold, size: 16)
+            .padding(.horizontal,16)
+            .padding(.bottom,12)
+        
+        ZStack(alignment: .bottomTrailing) {
+            TextEditor(text: txt)
+                .setFont(fontName: .mainFont, size: 14)
+                .padding(8)
+            
+            Text(count)
+                .setFont(fontName: .mainFont, size: 12)
+                .foregroundStyle(Color._99_A_1_AF)
+                .padding(.bottom,12)
+                .padding(.trailing,16)
+        }
+        .frame(height: 147)
+        .borderedCornerRadius(
+            8,
+            corners: .allCorners,
+            lineWidth: 1,
+            borderColor: .EDE_9_FE
+        )
+        .padding(.horizontal, 16)
     }
 }
 

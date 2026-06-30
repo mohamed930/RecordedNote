@@ -26,6 +26,11 @@ class EditNoteViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
     @Published var draftSelectedDate: Date = Date()
     @Published var draftSelectedTime: Date = Date()
+    @Published var selectedTab: NoteTab = .summary
+    @Published var noteSummary: String = ""
+    @Published var countString: String = ""
+    @Published var noteTranscript: String = ""
+    @Published var transScriptCount: String = ""
     
     // MARK: - Depandancy
     weak var coordinator: EditNoteCoordinator?
@@ -57,6 +62,10 @@ class EditNoteViewModel: ObservableObject {
         draftSelectedDate = note.date
         draftSelectedTime = note.date
         calenderConfiguration.initialMonth = note.date
+        noteSummary = note.summary
+        countString = "\(noteSummary.count) / 2000"
+        noteTranscript = note.transcript
+        transScriptCount = "\(noteTranscript.count) / 20000"
     }
     
     // MARK: - Actions.

@@ -10,6 +10,13 @@ import SwiftUI
 struct NotesSegmentView: View {
     
     @Binding var selectedTab: NoteTab
+    var isTappedImageVisisble: Bool
+    
+    init(selectedTab: Binding<NoteTab>,isTappedImageVisisble: Bool = false) {
+        self._selectedTab = selectedTab
+        self.isTappedImageVisisble = isTappedImageVisisble
+    }
+
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,13 +29,28 @@ struct NotesSegmentView: View {
                         }
                     } label: {
                         VStack(spacing: 12) {
-                            Text(tab.rawValue)
-                                .setFont(fontName: .mainFontSemiBold, size: 14)
-                                .foregroundStyle(
-                                    selectedTab == tab
-                                    ? Color._7_C_3_AED
-                                    : Color._99_A_1_AF
-                                )
+                            HStack(spacing: 6) {
+                                
+                                if isTappedImageVisisble {
+                                    switch tab {
+                                    case .summary:
+                                        Image(systemName: "list.bullet")
+                                    case .transcript:
+                                        Image(systemName: "doc.text")
+                                    case .tasks:
+                                        Image(systemName: "checkmark.square")
+                                    }
+                                }
+                                
+                                Text(tab.rawValue)
+                                    
+                            }
+                            .setFont(fontName: .mainFontSemiBold, size: 14)
+                            .foregroundStyle(
+                                selectedTab == tab
+                                ? Color._7_C_3_AED
+                                : Color._99_A_1_AF
+                            )
                             
                             Rectangle()
                                 .fill(
